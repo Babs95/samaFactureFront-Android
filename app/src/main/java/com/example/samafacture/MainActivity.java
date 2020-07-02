@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     //authentification(login, password);
                     String logn = "Bbasb";
-                    Intent intent = new Intent();
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                     intent.putExtra("ExtraLogin", logn);
                     startActivity(intent);
                 }
