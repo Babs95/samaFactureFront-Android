@@ -1,3 +1,22 @@
 <resources>
-    <string name="app_name">samafacture</string>
+    <string name="app_name">SAMA FACTURE</string>
+    <string name="connection">Connection</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="connect">Connect</string>
+    <string name="sign_in">Sign In</string>
+    <string name="help">Help</string>
+    <string name="cancel">Cancel</string>
+    <string name="inscription">Inscription</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="email">Email</string>
+    <string name="libelle">Libelle</string>
+    <string name="save">Save</string>
+    <string name="error_fields">Required fields</string>
+    <string name="error_parameters">Credentials error</string>
+    <string name="error_connection">Connection error</string>
+    <string name="welcome">Welcome</string>
+    <string name="wait">Please wait</string>
+    <string name="success_save">Successfully</string>
 </resources>

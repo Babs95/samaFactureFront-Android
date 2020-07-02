@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">SAMA FACTURE</string>
+    <string name="connection">Connexion</string>
+    <string name="login">Identifiant</string>
+    <string name="password">Mot de passe</string>
+    <string name="connect">Se connecter</string>
+    <string name="sign_in">S\'inscrire</string>
+    <string name="help">Aide</string>
+    <string name="cancel">Annuler</string>
+    <string name="inscription">Inscription</string>
+    <string name="first_name">Prénom</string>
+    <string name="last_name">Nom</string>
+    <string name="email">Email</string>
+    <string name="libelle">Libelle</string>
+    <string name="save">Enregistrer</string>
+    <string name="error_fields">Champs obligatoires</string>
+    <string name="error_parameters">Identifiant ou mot de passe incorrects</string>
+    <string name="error_connection">Erreur de connexion</string>
+    <string name="welcome">Bienvenue</string>
+    <string name="wait">Veuillez patienter svp ...</string>
+    <string name="success_save">Enregistrement réussi</string>
+</resources>
