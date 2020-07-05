@@ -42,12 +42,7 @@ public class MainActivity extends AppCompatActivity {
         txtPassword = findViewById(R.id.txtPassword);
         btnConnect = findViewById(R.id.btnConnect);
         btnSignIn = findViewById(R.id.btnSignIn);
-        //Button
-        /*wave2 = new Wave();
-        wave2.setBounds(0, 0, 100, 100);
-        wave2.setColor(getResources().getColor(R.color.colorAccent));
-        //wave2.stop();
-        btnConnect.setCompoundDrawables(wave2, null, null, null);*/
+
 
         //Progessbar
         progressBar = (ProgressBar)findViewById(R.id.spin_kit);
@@ -72,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("ExtraLogin", logn);
                     startActivity(intent);*/
                 }
+            }
+        });
+
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, InscriptionActivity.class);
+                startActivity(intent);
             }
         });
     }

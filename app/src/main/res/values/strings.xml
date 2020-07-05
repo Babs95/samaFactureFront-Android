@@ -16,6 +16,8 @@
     <string name="error_fields">Required fields</string>
     <string name="error_parameters">Credentials error</string>
     <string name="error_connection">Connection error</string>
+    <string name="error_login_length">Login too long</string>
+    <string name="error_email_format">Please enter a valid email</string>
     <string name="welcome">Welcome</string>
     <string name="wait">Please wait</string>
     <string name="success_save">Successfully</string>

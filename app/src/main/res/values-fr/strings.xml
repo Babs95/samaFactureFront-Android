@@ -16,6 +16,8 @@
     <string name="error_fields">Champs obligatoires</string>
     <string name="error_parameters">Identifiant ou mot de passe incorrects</string>
     <string name="error_connection">Erreur de connexion</string>
+    <string name="error_login_length">Votre login est trop long</string>
+    <string name="error_email_format">Veuillez entrer un email valide svp!</string>
     <string name="welcome">Bienvenue</string>
     <string name="wait">Veuillez patienter svp ...</string>
     <string name="success_save">Enregistrement réussi</string>
