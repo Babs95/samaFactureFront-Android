@@ -8,6 +8,13 @@
     android:padding="@dimen/size_all"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="160dp"
+        app:srcCompat="@mipmap/ic_launcher" />
+
     <TextView
         android:text="@string/connection"
         android:textSize="@dimen/size_title"
@@ -44,5 +51,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></Button>
 
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Wave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/colorAccent" />
 
 </LinearLayout>
