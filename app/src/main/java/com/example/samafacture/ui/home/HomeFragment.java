@@ -12,7 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.samafacture.Models.User;
 import com.example.samafacture.R;
+import com.example.samafacture.SqLiteDatabase.BdSamaFacture;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -28,6 +32,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
+
             }
         });
         return root;

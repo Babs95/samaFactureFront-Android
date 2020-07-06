@@ -13,11 +13,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.samafacture.Models.User;
+import com.example.samafacture.SqLiteDatabase.BdSamaFacture;
 import com.github.ybq.android.spinkit.style.Wave;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,9 +37,13 @@ public class MainActivity extends AppCompatActivity {
     private  String login, password;
     ProgressBar progressBar;
     Wave wave2;
+    private BdSamaFacture bdSamaFacture;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //creation de la base de données
+        bdSamaFacture = new BdSamaFacture(this);
 
         setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main);
@@ -42,6 +51,20 @@ public class MainActivity extends AppCompatActivity {
         txtPassword = findViewById(R.id.txtPassword);
         btnConnect = findViewById(R.id.btnConnect);
         btnSignIn = findViewById(R.id.btnSignIn);
+
+        /*List<User> listUser =  bdSamaFacture.ListUser();
+        for (int i=0;i<listUser.size();i++){
+            System.out.println(listUser.get(i).getId());
+            System.out.println(listUser.get(i).getNom());
+            System.out.println(listUser.get(i).getPrenom());
+            System.out.println(listUser.get(i).getEmail());
+            System.out.println(listUser.get(i).getLogin());
+            System.out.println(listUser.get(i).getPassword());
+            System.out.println(listUser.get(i).getUser_id());
+        }*/
+        //boolean b = bdSamaFacture.checkUserExist();
+        //System.out.println("Nombre User");
+        //System.out.println(b);
 
 
         //Progessbar
@@ -126,6 +149,27 @@ public class MainActivity extends AppCompatActivity {
                             });
 
                         } else {
+                            JSONArray jsonArray=jo.getJSONArray("user");
+
+                            for(int i=0;i<jsonArray.length();i++){
+                                JSONObject jsonObject1=jsonArray.getJSONObject(i);
+                                Gson gson=new Gson();
+                                User user = gson.fromJson(jsonObject1.toString(), User.class);
+                                System.out.println("id");
+                                System.out.println(user.getId());
+                                System.out.println("nom");
+                                System.out.println(user.getNom());
+                                System.out.println("Prenom");
+                                System.out.println(user.getPrenom());
+                                System.out.println("user_id");
+                                System.out.println(user.getUser_id());
+                                boolean check =bdSamaFacture.checkUserExist();
+                                if(check == true){
+                                    bdSamaFacture.updateUser(1,user.getNom(),user.getPrenom(),user.getEmail(),user.getLogin(),user.getPassword(),user.getId());
+                                }else {
+                                    bdSamaFacture.createUser(user.getNom(),user.getPrenom(),user.getEmail(),user.getLogin(),user.getPassword(),user.getId());
+                                }
+                            }
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

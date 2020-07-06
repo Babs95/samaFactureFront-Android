@@ -8,6 +8,15 @@
     android:padding="16dp"
     tools:context=".InscriptionActivity">
 
+    <TextView
+        android:text="@string/inscription"
+        android:textSize="@dimen/size_title"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_top"></TextView>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txt_input_nom"
         android:layout_width="match_parent"

@@ -3,11 +3,13 @@ package com.example.samafacture;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.samafacture.SqLiteDatabase.BdSamaFacture;
 import com.github.ybq.android.spinkit.style.Wave;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -35,6 +37,7 @@ public class InscriptionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inscription);
+
         txtInputNom = findViewById(R.id.txt_input_nom);
         txtInputPrenom = findViewById(R.id.txt_input_prenom);
         txtInputEmail = findViewById(R.id.txt_input_email);
@@ -46,6 +49,7 @@ public class InscriptionActivity extends AppCompatActivity {
         wave = new Wave();
         wave.setBounds(0, 0, 100, 100);
         wave.setColor(getResources().getColor(R.color.colorAccent));
+        //wave.setVisible(false);
         btnSaveUser.setCompoundDrawables(wave, null, null, null);
 
         btnSaveUser.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +69,7 @@ public class InscriptionActivity extends AppCompatActivity {
                             "}";
                     System.out.println(postBody);
                     postUser(postBody);
+
                 }
             }
         });
@@ -157,31 +162,61 @@ public class InscriptionActivity extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    System.out.println("In onResponse");
                     try {
-                        JSONObject jo = new JSONObject(response.body().string());
-                        //message2 = response.body().string();
-                        final String myResponse = response.body().string();
-                        if(response.isSuccessful()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    System.out.println(myResponse);
-                                    wave.stop();
-                                    String message = "Utilisateur crée avec succèss";
-                                    Toast.makeText(InscriptionActivity.this, message, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
+                        //final String babs = response.body().string();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                System.out.println("In response.isSuccessful()");
+                                String message = "Utilisateur crée avec succèss";
+                                Toast.makeText(InscriptionActivity.this, message, Toast.LENGTH_SHORT).show();
+                                EraseFields();
+                                wave.stop();
+                            }
+                        });
+
+
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+                    /*try {
+                        System.out.println("In try catch");
+
 
 
                     }catch (Exception e){
 
-                    }
+                    }*/
                 }
             });
 
         } catch (Exception e){
 
         }
+    }
+    /**
+     * Cette fonction permet de vider les champs de saisies
+     * et de décocher les checkbox
+     */
+    private void EraseFields() {
+        txtInputNom.getEditText().setText("");
+        txtInputPrenom.getEditText().setText("");
+        txtInputEmail.getEditText().setText("");
+        txtInputLogin.getEditText().setText("");
+        txtInputPassword.getEditText().setText("");
+        //Ici on vérifie d'abord si le checkbox est déjà cocher avant de le décocher
+        /*if (cbOLevel.isChecked()) {
+            cbOLevel.setChecked(false);
+        }
+        if (cbBachelor.isChecked()) {
+            cbBachelor.setChecked(false);
+        }
+        if (cbMaster.isChecked()) {
+            cbMaster.setChecked(false);
+        }*/
+
+
     }
 }
