@@ -17,10 +17,17 @@
         android:name="com.example.samafacture.FactureActivity"
         android:label="@string/my_facture"
         tools:layout="@layout/activity_facture" />
+
+    <fragment
+        android:id="@+id/nav_profil"
+        android:name="com.example.samafacture.ProfilFragment"
+        android:label="@string/menu_profil"
+        tools:layout="@layout/fragment_profil" />
     <fragment
         android:id="@+id/nav_help"
         android:name="com.example.samafacture.ui.slideshow.SlideshowFragment"
         android:label="@string/help"
         tools:layout="@layout/fragment_slideshow" />
+
 
 </navigation>

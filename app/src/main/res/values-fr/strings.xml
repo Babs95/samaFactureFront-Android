@@ -13,6 +13,8 @@
     <string name="last_name">Nom</string>
     <string name="email">Email</string>
     <string name="libelle">Libelle</string>
+    <string name="menu_profil">Profil</string>
+    <string name="nouvelle_annee">Nouvelle annee</string>
     <string name="save">Enregistrer</string>
     <string name="error_fields">Champs obligatoires</string>
     <string name="error_parameters">Identifiant ou mot de passe incorrects</string>

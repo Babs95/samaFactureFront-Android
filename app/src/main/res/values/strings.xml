@@ -33,7 +33,11 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_profil">Profil</string>
+    <string name="nouvelle_annee">New Year</string>
 
     <string name="home_second">Home Second</string>
     <string name="title_activity_home">HomeActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
