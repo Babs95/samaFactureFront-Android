@@ -90,7 +90,7 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/btnSaveUser"
+        android:id="@+id/btnSaveYear"
         android:text="@string/nouvelle_annee"
         android:layout_width="wrap_content"
         android:layout_marginTop="20dp"

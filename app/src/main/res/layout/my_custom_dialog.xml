@@ -8,48 +8,69 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="238dp"
         android:padding="10dp">
 
         <TextView
+            android:id="@+id/heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your Custom Dialog Heading"
-            android:textSize="18sp"
+            android:text="Libelle annee"
             android:textColor="#000"
-            android:id="@+id/heading"/>
+            android:textSize="18sp" />
 
         <EditText
+            android:id="@+id/inputAnnee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/heading"
             android:layout_marginTop="20dp"
             android:background="@null"
-            android:textColor="#000"
-            android:hint="enter some text..."
-            android:id="@+id/input"/>
+            android:hint="enter une annee..."
+            android:textColor="#000" />
 
-        <TextView
+        <CheckBox
+            android:id="@+id/inputActive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:textSize="18sp"
-            android:textColor="#33bbff"
-            android:id="@+id/action_ok"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CANCEL"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginRight="20dp"
-            android:textSize="18sp"
+            android:layout_below="@id/inputAnnee"
+            android:text="Actif" />
+        <CheckBox
+            android:id="@+id/inputInactive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:layout_below="@id/inputAnnee"
+            android:text="Non-Actif" />
+
+        <TextView
+            android:id="@+id/action_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:text="@string/save"
             android:textColor="#33bbff"
-            android:id="@+id/action_cancel"/>
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/action_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:text="@string/cancel"
+            android:textColor="#33bbff"
+            android:textSize="18sp" />
+
+
 
     </RelativeLayout>
 

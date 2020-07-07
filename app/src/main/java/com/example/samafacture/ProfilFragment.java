@@ -56,6 +56,9 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
     public TextView mInputDisplay,nom,prenom,email,login;
     private RecyclerView ListAnneRecyclerView;
 
+    public ProfilFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
         prenom = view.findViewById(R.id.txtProfilPrenom);
         email = view.findViewById(R.id.txtProfilEmail);
         login = view.findViewById(R.id.txtProfilLogin);
+        mOpenDialog = view.findViewById(R.id.btnSaveYear);
         ListAnneRecyclerView = view.findViewById(R.id.ListAnneRecycler);
         ListAnnee=new ArrayList<>();
         loadRecyclerViewData();
@@ -76,6 +80,15 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
             email.setText(ListUserConnected.get(i).getEmail());
             login.setText(ListUserConnected.get(i).getLogin());
         }
+        mOpenDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyCustomDialog dialog = new MyCustomDialog();
+                dialog.setTargetFragment(ProfilFragment.this, 1);
+                dialog.show(getFragmentManager(), "MyCustomDialog");
+
+            }
+        });
         //tabAnnee =  getResources().getStringArray(R.array.tab_annee);
         //tabEtat =  getResources().getStringArray(R.array.tab_etat);
 
@@ -110,8 +123,8 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
     @Override
     public void sendInput(String input) {
         Log.d(TAG, "sendInput: found incoming input: " + input);
-
-        mInputDisplay.setText(input);
+        System.out.println("send Input"+input);
+     //   mInputDisplay.setText(input);
     }
 
     //Listener for RecyclerView
