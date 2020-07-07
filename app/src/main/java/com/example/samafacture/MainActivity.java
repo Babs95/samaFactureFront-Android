@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         btnConnect = findViewById(R.id.btnConnect);
         btnSignIn = findViewById(R.id.btnSignIn);
 
-        /*List<User> listUser =  bdSamaFacture.ListUser();
+        List<User> listUser =  bdSamaFacture.ListUser();
         for (int i=0;i<listUser.size();i++){
             System.out.println(listUser.get(i).getId());
             System.out.println(listUser.get(i).getNom());
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(listUser.get(i).getLogin());
             System.out.println(listUser.get(i).getPassword());
             System.out.println(listUser.get(i).getUser_id());
-        }*/
+        }
         //boolean b = bdSamaFacture.checkUserExist();
         //System.out.println("Nombre User");
         //System.out.println(b);
