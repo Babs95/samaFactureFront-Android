@@ -86,9 +86,16 @@
 
 
 
-
     </RelativeLayout>
 
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit2"
+        style="@style/SpinKitView.Large.CubeGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/colorAccent" />
     <Button
         android:id="@+id/btnSaveYear"
         android:text="@string/nouvelle_annee"
@@ -101,5 +108,6 @@
         android:id="@+id/ListAnneRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </LinearLayout>

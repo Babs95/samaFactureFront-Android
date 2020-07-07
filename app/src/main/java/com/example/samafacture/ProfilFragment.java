@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,9 @@ import com.example.samafacture.Models.Annee;
 import com.example.samafacture.Models.MyAnneeAdapter;
 import com.example.samafacture.Models.User;
 import com.example.samafacture.SqLiteDatabase.BdSamaFacture;
+import com.github.ybq.android.spinkit.style.ChasingDots;
+import com.github.ybq.android.spinkit.style.CubeGrid;
+import com.github.ybq.android.spinkit.style.Wave;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -51,6 +55,7 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
     private ListView listAnnee;
     private ArrayList<Annee> ListAnnee;
     private BdSamaFacture bdSamaFacture;
+    ProgressBar progressBar;
 
     private Button mOpenDialog;
     public TextView mInputDisplay,nom,prenom,email,login;
@@ -72,6 +77,12 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
         mOpenDialog = view.findViewById(R.id.btnSaveYear);
         ListAnneRecyclerView = view.findViewById(R.id.ListAnneRecycler);
         ListAnnee=new ArrayList<>();
+        //Progessbar
+        progressBar = (ProgressBar) view.findViewById(R.id.spin_kit2);
+        CubeGrid cubeGrid = new CubeGrid();
+        progressBar.setIndeterminateDrawable(cubeGrid);
+        progressBar.setVisibility(View.GONE);
+
         loadRecyclerViewData();
         List<User> ListUserConnected = bdSamaFacture.ListUser();
         for (int i=0;i<ListUserConnected.size();i++){
@@ -124,7 +135,16 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
     public void sendInput(String input) {
         Log.d(TAG, "sendInput: found incoming input: " + input);
         System.out.println("send Input"+input);
-     //   mInputDisplay.setText(input);
+        getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                System.out.println("In response.isSuccessful()");
+                String message = "Annee crée avec succèss";
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                loadRecyclerViewData();
+            }
+        });
+
     }
 
     //Listener for RecyclerView
@@ -134,7 +154,8 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
     }
 
 
-    private void loadRecyclerViewData() {
+    public void loadRecyclerViewData() {
+        progressBar.setVisibility(View.VISIBLE);
         String url = "https://api-samafacture.herokuapp.com/api/annee/getall";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -146,6 +167,7 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        progressBar.setVisibility(View.GONE);
                         String error = getString(R.string.error_connection);
                         Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                     }
@@ -184,6 +206,7 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            progressBar.setVisibility(View.GONE);
                             initRecyclerView();
                         }
                     });

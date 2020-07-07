@@ -38,7 +38,7 @@ public class MyCustomDialog extends DialogFragment {
     private EditText mInput;
     private CheckBox actif,inactif;
     private TextView mActionOk, mActionCancel;
-    private String etat;
+    private String etat,babs;
 
     @Nullable
     @Override
@@ -62,6 +62,7 @@ public class MyCustomDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                     etat="";
+                    babs =mInput.getText().toString().trim();
                 if (actif.isChecked()) {
                     etat= actif.getText().toString().trim()+"";
                 }
@@ -75,7 +76,8 @@ public class MyCustomDialog extends DialogFragment {
                 System.out.println(postBody);
                 postAnnee(postBody);
 
-
+                /*ProfilFragment p = new ProfilFragment();
+                p.loadRecyclerViewData();*/
 
                 getDialog().dismiss();
 
@@ -109,33 +111,18 @@ public class MyCustomDialog extends DialogFragment {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     System.out.println("In onResponse");
+                    //mOnInputSelected.sendInput(mInput.getText().toString());
                     try {
                         //final String babs = response.body().string();
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                System.out.println("In response.isSuccessful()");
-                                String message = "Annee crée avec succèss";
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                                mOnInputSelected.sendInput(mInput.getText().toString());
-                              //  EraseFields();
-                               // wave.stop();
-                            }
-                        });
+                        if(getActivity() == null){
+                            mOnInputSelected.sendInput(babs);
+                        }
 
 
                     }catch (Exception e){
                         System.out.println(e);
                     }
-                    /*try {
-                        System.out.println("In try catch");
 
-
-
-                    }catch (Exception e){
-
-                    }*/
                 }
             });
 
