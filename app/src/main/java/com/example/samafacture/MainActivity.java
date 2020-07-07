@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         bdSamaFacture = new BdSamaFacture(this);
 
         setContentView(R.layout.activity_main);
-        setContentView(R.layout.activity_main);
         txtLogin = findViewById(R.id.txtLogin);
         txtPassword = findViewById(R.id.txtPassword);
         btnConnect = findViewById(R.id.btnConnect);
@@ -191,13 +190,13 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     }catch (Exception e){
-
+                        e.printStackTrace();
                     }
                 }
             });
 
         } catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 

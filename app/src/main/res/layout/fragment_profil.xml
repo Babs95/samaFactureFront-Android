@@ -18,7 +18,7 @@
 
     </TextView>
     <TextView
-        android:id="@+id/txtLogin"
+        android:id="@+id/txtInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Prenom"
