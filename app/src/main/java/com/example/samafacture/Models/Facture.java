@@ -2,20 +2,6 @@ package com.example.samafacture.Models;
 
 public class Facture {
 
-    private int id;
-    private String libelle;
-    private String montant;
-    private String mois;
-    private String annee;
-    private String modepaiement;
-    private String etat;
-    private String LocalState;
-    private String SyncOnLine;
-    private int idFacture;
-
-    public Facture() {
-    }
-
     public int getId() {
         return id;
     }
@@ -38,6 +24,22 @@ public class Facture {
 
     public void setMontant(String montant) {
         this.montant = montant;
+    }
+
+    public String getDateFacture() {
+        return dateFacture;
+    }
+
+    public void setDateFacture(String dateFacture) {
+        this.dateFacture = dateFacture;
+    }
+
+    public String getDatePaiement() {
+        return datePaiement;
+    }
+
+    public void setDatePaiement(String datePaiement) {
+        this.datePaiement = datePaiement;
     }
 
     public String getMois() {
@@ -95,6 +97,24 @@ public class Facture {
     public void setIdFacture(int idFacture) {
         this.idFacture = idFacture;
     }
+
+    private int id;
+    private String libelle;
+    private String montant;
+    private String dateFacture;
+    private String datePaiement;
+    private String mois;
+    private String annee;
+    private String modepaiement;
+    private String etat;
+    private String LocalState;
+    private String SyncOnLine;
+    private int idFacture;
+
+    public Facture() {
+    }
+
+
 
 
 

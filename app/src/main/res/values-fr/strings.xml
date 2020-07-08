@@ -2,6 +2,7 @@
     <string name="app_name">SAMA FACTURE</string>
     <string name="connection">Connexion</string>
     <string name="my_facture">Mes factures</string>
+    <string name="new_facture">Nouvelle Facture</string>
     <string name="login">Identifiant</string>
     <string name="password">Mot de passe</string>
     <string name="connect">Se connecter</string>
