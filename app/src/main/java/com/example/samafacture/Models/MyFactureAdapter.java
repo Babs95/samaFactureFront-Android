@@ -14,6 +14,8 @@ import com.example.samafacture.R;
 
 import java.util.ArrayList;
 
+import static com.example.samafacture.R.*;
+
 public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyViewHolder> {
     ArrayList<Facture> dataList;
     Context context;
@@ -25,7 +27,7 @@ public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyVi
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view=inflater.inflate(R.layout.my_rows2, parent, false);
+        View view=inflater.inflate(layout.my_rows2, parent, false);
         return new MyFactureAdapter.MyViewHolder(view);
     }
 
@@ -38,6 +40,13 @@ public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyVi
         if(dataList.get(position).getEtat().equalsIgnoreCase("Payer")){
             holder.btnPayer.setVisibility(View.INVISIBLE);
         }
+        if(dataList.get(position).getSyncOnLine().equalsIgnoreCase("nonOk")){
+            holder.myTextSynchro.setText("Non-synchroniser");
+            holder.myTextSynchro.setTextColor(context.getResources().getColor(color.colorRed));
+        }else {
+            holder.myTextSynchro.setText("Synchroniser");
+            holder.myTextSynchro.setTextColor(context.getResources().getColor(color.colorPrimaryDark));
+        }
     }
 
     @Override
@@ -46,15 +55,16 @@ public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyVi
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView myTextLibelle, myTextMois, myTextDate,myTextMontant;
+        TextView myTextLibelle, myTextMois, myTextDate,myTextMontant,myTextSynchro;
         Button btnPayer;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            myTextLibelle = itemView.findViewById(R.id.textViewLibFact);
-            myTextMois = itemView.findViewById(R.id.textViewMois);
-            myTextDate = itemView.findViewById(R.id.textViewDateFact);
-            myTextMontant = itemView.findViewById(R.id.textViewMontant);
-            btnPayer = itemView.findViewById(R.id.btnPayeFact);
+            myTextLibelle = itemView.findViewById(id.textViewLibFact);
+            myTextMois = itemView.findViewById(id.textViewMois);
+            myTextDate = itemView.findViewById(id.textViewDateFact);
+            myTextMontant = itemView.findViewById(id.textViewMontant);
+            myTextSynchro = itemView.findViewById(id.textViewSynchro);
+            btnPayer = itemView.findViewById(id.btnPayeFact);
 
         }
     }

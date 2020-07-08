@@ -33,6 +33,7 @@ public class FactureActivity extends Fragment {
         facture.setDateFacture("08/07/2020");
         facture.setMois("Juin");
         facture.setEtat("Non-payer");
+        facture.setSyncOnLine("nonOk");
         Facture facture2 = new Facture();
         facture2.setId(1);
         facture2.setLibelle("Senelec");
@@ -40,6 +41,7 @@ public class FactureActivity extends Fragment {
         facture2.setDateFacture("15/07/2020");
         facture2.setMois("Juillet");
         facture2.setEtat("Payer");
+        facture2.setSyncOnLine("Ok");
         ListFacture.add(facture);
         ListFacture.add(facture2);
         //Initialisation RecyclerViewFacture
