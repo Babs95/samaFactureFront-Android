@@ -44,7 +44,7 @@ public class MyAnneeAdapter extends RecyclerView.Adapter<MyAnneeAdapter.MyViewHo
         holder.myText1.setText(data.get(position).getLibelle());
         holder.myText2.setText(data.get(position).getEtat());
         if (data.get(position).getEtat().equalsIgnoreCase("Non-Actif")){
-            holder.myText2.setTextColor(R.color.colorRed);
+            holder.myText2.setTextColor(context.getResources().getColor(R.color.colorRed));
         }
     }
 

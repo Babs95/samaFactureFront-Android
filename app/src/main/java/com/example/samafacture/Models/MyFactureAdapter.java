@@ -36,7 +36,7 @@ public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyVi
         holder.myTextLibelle.setText(dataList.get(position).getLibelle());
         holder.myTextMois.setText(dataList.get(position).getMois());
         holder.myTextDate.setText(dataList.get(position).getDateFacture());
-        holder.myTextMontant.setText(dataList.get(position).getMontant());
+        holder.myTextMontant.setText(dataList.get(position).getMontant()+"f");
         if(dataList.get(position).getEtat().equalsIgnoreCase("Payer")){
             holder.btnPayer.setVisibility(View.INVISIBLE);
         }
