@@ -18,23 +18,24 @@ import java.util.zip.Inflater;
 
 public class MyAnneeAdapter extends RecyclerView.Adapter<MyAnneeAdapter.MyViewHolder> {
 
-    //String data1[],data2[];
+    // String data1[],data2[];
     ArrayList<Annee> data;
     Context context;
     private OnAnneeListener mOnAnneeListener;
 
-    public MyAnneeAdapter(Context ct, ArrayList<Annee> tabAnnee,OnAnneeListener onAnneeListener){
+    public MyAnneeAdapter(Context ct, ArrayList<Annee> tabAnnee, OnAnneeListener onAnneeListener) {
         context = ct;
-        data=tabAnnee;
-       // data2=tabEtat;
+        data = tabAnnee;
+        // data2=tabEtat;
         this.mOnAnneeListener = onAnneeListener;
     }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view=inflater.inflate(R.layout.my_rows, parent, false);
+        View view = inflater.inflate(R.layout.my_rows, parent, false);
         return new MyViewHolder(view, mOnAnneeListener);
     }
 
@@ -43,7 +44,7 @@ public class MyAnneeAdapter extends RecyclerView.Adapter<MyAnneeAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.myText1.setText(data.get(position).getLibelle());
         holder.myText2.setText(data.get(position).getEtat());
-        if (data.get(position).getEtat().equalsIgnoreCase("Non-Actif")){
+        if (data.get(position).getEtat().equalsIgnoreCase("Non-Actif")) {
             holder.myText2.setTextColor(context.getResources().getColor(R.color.colorRed));
         }
     }
@@ -57,7 +58,7 @@ public class MyAnneeAdapter extends RecyclerView.Adapter<MyAnneeAdapter.MyViewHo
         TextView myText1, myText2;
         OnAnneeListener onAnneeListener;
 
-        public MyViewHolder(@NonNull View itemView,OnAnneeListener onAnneeListener) {
+        public MyViewHolder(@NonNull View itemView, OnAnneeListener onAnneeListener) {
             super(itemView);
             myText1 = itemView.findViewById(R.id.name_annne);
             myText2 = itemView.findViewById(R.id.annee_etat);
@@ -71,7 +72,7 @@ public class MyAnneeAdapter extends RecyclerView.Adapter<MyAnneeAdapter.MyViewHo
         }
     }
 
-    public interface OnAnneeListener{
+    public interface OnAnneeListener {
         void onAnneeClick(int position);
     }
 }

@@ -9,28 +9,72 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.example.samafacture.Models.Annee;
 import com.example.samafacture.Models.Facture;
 import com.example.samafacture.Models.MyFactureAdapter;
+import com.example.samafacture.SqLiteDatabase.BdSamaFacture;
+import com.github.ybq.android.spinkit.style.CubeGrid;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class FactureActivity extends Fragment {
     private RecyclerView ListFactureRecyclerView;
     private ArrayList<Facture> ListFacture;
+    private BdSamaFacture bdSamaFacture;
+    ProgressBar progressBar;
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_facture, container, false);
         //setContentView(R.layout.activity_facture);
+        bdSamaFacture = new BdSamaFacture(getActivity());
+        //Progessbar
+        /*progressBar = (ProgressBar) view.findViewById(R.id.spin_kit2);
+        CubeGrid cubeGrid = new CubeGrid();
+        progressBar.setIndeterminateDrawable(cubeGrid);
+        progressBar.setVisibility(View.GONE);*/
         ListFactureRecyclerView = view.findViewById(R.id.ListFactRecycler);
         ListFacture = new ArrayList<>();
-        Facture facture = new Facture();
+        ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
+        for (int i=0;i<ListFacture.size();i++){
+            System.out.println("Facture"+i);
+            System.out.println(ListFacture.get(i).getId());
+            System.out.println(ListFacture.get(i).getLibelle());
+            System.out.println(ListFacture.get(i).getDatePaiement());
+            System.out.println(ListFacture.get(i).getMontant());
+            System.out.println(ListFacture.get(i).getEtat());
+            System.out.println(ListFacture.get(i).getUser_id());
+            System.out.println(ListFacture.get(i).getFournisseur());
+            System.out.println(ListFacture.get(i).getTypepaiement());
+            System.out.println(ListFacture.get(i).getAnnee());
+            System.out.println(ListFacture.get(i).getMois());
+            System.out.println(ListFacture.get(i).getLocalState());
+            System.out.println(ListFacture.get(i).getSyncOnLine());
+            System.out.println(ListFacture.get(i).getIdFacture());
+
+        }
+        /*Facture facture = new Facture();
         facture.setId(1);
         facture.setLibelle("Internet");
         facture.setMontant("12.900");
-        facture.setDateFacture("08/07/2020");
+        facture.setDatePaiement("");
         facture.setMois("Juin");
         facture.setEtat("Non-payer");
         facture.setSyncOnLine("nonOk");
@@ -38,12 +82,12 @@ public class FactureActivity extends Fragment {
         facture2.setId(1);
         facture2.setLibelle("Senelec");
         facture2.setMontant("150.000");
-        facture2.setDateFacture("15/07/2020");
+        facture2.setDatePaiement("15/07/2020");
         facture2.setMois("Juillet");
         facture2.setEtat("Payer");
         facture2.setSyncOnLine("Ok");
         ListFacture.add(facture);
-        ListFacture.add(facture2);
+        ListFacture.add(facture2);*/
         //Initialisation RecyclerViewFacture
         initRecyclerView();
         return view;
@@ -53,4 +97,5 @@ public class FactureActivity extends Fragment {
         ListFactureRecyclerView.setAdapter(myFactureAdapter);
         ListFactureRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
+
 }

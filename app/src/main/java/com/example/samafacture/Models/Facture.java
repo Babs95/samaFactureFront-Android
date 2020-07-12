@@ -1,6 +1,22 @@
 package com.example.samafacture.Models;
 
 public class Facture {
+    private int id;
+    private String libelle;
+    private String datePaiement;
+    private String montant;
+    private String etat;
+    private int user_id;
+    private String fournisseur;
+    private String typepaiement;
+    private String annee;
+    private String mois;
+    private String LocalState;
+    private String SyncOnLine;
+    private int idFacture;
+
+    public Facture() {
+    }
 
     public int getId() {
         return id;
@@ -18,22 +34,6 @@ public class Facture {
         this.libelle = libelle;
     }
 
-    public String getMontant() {
-        return montant;
-    }
-
-    public void setMontant(String montant) {
-        this.montant = montant;
-    }
-
-    public String getDateFacture() {
-        return dateFacture;
-    }
-
-    public void setDateFacture(String dateFacture) {
-        this.dateFacture = dateFacture;
-    }
-
     public String getDatePaiement() {
         return datePaiement;
     }
@@ -42,12 +42,44 @@ public class Facture {
         this.datePaiement = datePaiement;
     }
 
-    public String getMois() {
-        return mois;
+    public String getMontant() {
+        return montant;
     }
 
-    public void setMois(String mois) {
-        this.mois = mois;
+    public void setMontant(String montant) {
+        this.montant = montant;
+    }
+
+    public String getEtat() {
+        return etat;
+    }
+
+    public void setEtat(String etat) {
+        this.etat = etat;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getFournisseur() {
+        return fournisseur;
+    }
+
+    public void setFournisseur(String fournisseur) {
+        this.fournisseur = fournisseur;
+    }
+
+    public String getTypepaiement() {
+        return typepaiement;
+    }
+
+    public void setTypepaiement(String typepaiement) {
+        this.typepaiement = typepaiement;
     }
 
     public String getAnnee() {
@@ -58,20 +90,12 @@ public class Facture {
         this.annee = annee;
     }
 
-    public String getModepaiement() {
-        return modepaiement;
+    public String getMois() {
+        return mois;
     }
 
-    public void setModepaiement(String modepaiement) {
-        this.modepaiement = modepaiement;
-    }
-
-    public String getEtat() {
-        return etat;
-    }
-
-    public void setEtat(String etat) {
-        this.etat = etat;
+    public void setMois(String mois) {
+        this.mois = mois;
     }
 
     public String getLocalState() {
@@ -97,26 +121,6 @@ public class Facture {
     public void setIdFacture(int idFacture) {
         this.idFacture = idFacture;
     }
-
-    private int id;
-    private String libelle;
-    private String montant;
-    private String dateFacture;
-    private String datePaiement;
-    private String mois;
-    private String annee;
-    private String modepaiement;
-    private String etat;
-    private String LocalState;
-    private String SyncOnLine;
-    private int idFacture;
-
-    public Facture() {
-    }
-
-
-
-
 
 
 }

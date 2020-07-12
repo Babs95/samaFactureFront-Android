@@ -23,8 +23,9 @@ public class BdSamaFacture extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT,nom TEXT,prenom TEXT,email TEXT,login VARCHAR(30),password VARCHAR(20),user_id INTEGER);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS facture (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,montant TEXT,mois TEXT,annee TEXT,modepaiement TEXT,etat TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER UNIQUE);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS facture (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,datePaiement TEXT,montant TEXT,etat TEXT,user_id INTEGER,fournisseur TEXT,typepaiement TEXT,annee TEXT,mois TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER UNIQUE);");
         db.execSQL("CREATE TABLE IF NOT EXISTS annee (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,etat TEXT);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS factureTemp (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,datePaiement TEXT,montant TEXT,etat TEXT,user_id INTEGER,fournisseur TEXT,typepaiement TEXT,annee TEXT,mois TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER UNIQUE);");
     }
 
     @Override
@@ -113,16 +114,23 @@ public class BdSamaFacture extends SQLiteOpenHelper {
         return listUsers;
     }
 
-    public boolean createFacture(String libelle,String montant,String mois,String annee,String modepaiement,String etat,String LocalState,String SyncOnLine,int idFacture){
+    /**
+     *
+     * Table Facture
+     */
+    public boolean createFacture(String libelle,String datePaiement,String montant,String etat,int user_id,String fournisseur,String typepaiement,String annee,String mois,String LocalState,String SyncOnLine,int idFacture){
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put("libelle", libelle);
+            cv.put("datePaiement", datePaiement);
             cv.put("montant", montant);
-            cv.put("mois", mois);
-            cv.put("annee", annee);
-            cv.put("modepaiement", modepaiement);
             cv.put("etat", etat);
+            cv.put("user_id", user_id);
+            cv.put("fournisseur", fournisseur);
+            cv.put("typepaiement", typepaiement);
+            cv.put("annee", annee);
+            cv.put("mois", mois);
             cv.put("LocalState", LocalState);
             cv.put("SyncOnLine", SyncOnLine);
             cv.put("idFacture", idFacture);
@@ -134,16 +142,19 @@ public class BdSamaFacture extends SQLiteOpenHelper {
             return false;
         }
     }
-    public boolean updateFacture(int id,String libelle,String montant,String mois,String annee,String modepaiement,String etat,String LocalState,String SyncOnLine,int idFacture){
+    public boolean updateFacture(int id,String libelle,String datePaiement,String montant,String etat,int user_id,String fournisseur,String typepaiement,String annee,String mois,String LocalState,String SyncOnLine,int idFacture){
             try {
                 SQLiteDatabase db = this.getWritableDatabase();
                 ContentValues cv = new ContentValues();
                 cv.put("libelle", libelle);
+                cv.put("datePaiement", datePaiement);
                 cv.put("montant", montant);
-                cv.put("mois", mois);
-                cv.put("annee", annee);
-                cv.put("modepaiement", modepaiement);
                 cv.put("etat", etat);
+                cv.put("user_id", user_id);
+                cv.put("fournisseur", fournisseur);
+                cv.put("typepaiement", typepaiement);
+                cv.put("annee", annee);
+                cv.put("mois", mois);
                 cv.put("LocalState", LocalState);
                 cv.put("SyncOnLine", SyncOnLine);
                 cv.put("idFacture", idFacture);
@@ -174,15 +185,19 @@ public class BdSamaFacture extends SQLiteOpenHelper {
         try {
             Cursor c = db.query("facture",null,null,null, null,null, null);
             if (c!=null && c.getCount() > 0) {
+                c.moveToFirst();
                 do{
                     Facture facture = new Facture();
                     facture.setId(c.getInt(c.getColumnIndexOrThrow("id")));
                     facture.setLibelle(c.getString(c.getColumnIndexOrThrow("libelle")));
+                    facture.setDatePaiement(c.getString(c.getColumnIndexOrThrow("datePaiement")));
                     facture.setMontant(c.getString(c.getColumnIndexOrThrow("montant")));
-                    facture.setMois(c.getString(c.getColumnIndexOrThrow("mois")));
-                    facture.setAnnee(c.getString(c.getColumnIndexOrThrow("annee")));
-                    facture.setModepaiement(c.getString(c.getColumnIndexOrThrow("modepaiement")));
                     facture.setEtat(c.getString(c.getColumnIndexOrThrow("etat")));
+                    facture.setUser_id(c.getInt(c.getColumnIndexOrThrow("user_id")));
+                    facture.setFournisseur(c.getString(c.getColumnIndexOrThrow("fournisseur")));
+                    facture.setTypepaiement(c.getString(c.getColumnIndexOrThrow("typepaiement")));
+                    facture.setAnnee(c.getString(c.getColumnIndexOrThrow("annee")));
+                    facture.setMois(c.getString(c.getColumnIndexOrThrow("mois")));
                     facture.setLocalState(c.getString(c.getColumnIndexOrThrow("LocalState")));
                     facture.setSyncOnLine(c.getString(c.getColumnIndexOrThrow("SyncOnLine")));
                     facture.setIdFacture(c.getInt(c.getColumnIndexOrThrow("idFacture")));
@@ -202,15 +217,123 @@ public class BdSamaFacture extends SQLiteOpenHelper {
         try {
             Cursor c = db.query("facture",null,"LocalState = 'payer' AND SyncOnLine = 'nonOk'",null, null,null, null);
             if (c!=null && c.getCount() > 0){
+                c.moveToFirst();
                 do{
                     Facture facture = new Facture();
                     facture.setId(c.getInt(c.getColumnIndexOrThrow("id")));
                     facture.setLibelle(c.getString(c.getColumnIndexOrThrow("libelle")));
+                    facture.setDatePaiement(c.getString(c.getColumnIndexOrThrow("datePaiement")));
                     facture.setMontant(c.getString(c.getColumnIndexOrThrow("montant")));
-                    facture.setMois(c.getString(c.getColumnIndexOrThrow("mois")));
-                    facture.setAnnee(c.getString(c.getColumnIndexOrThrow("annee")));
-                    facture.setModepaiement(c.getString(c.getColumnIndexOrThrow("modepaiement")));
                     facture.setEtat(c.getString(c.getColumnIndexOrThrow("etat")));
+                    facture.setUser_id(c.getInt(c.getColumnIndexOrThrow("user_id")));
+                    facture.setFournisseur(c.getString(c.getColumnIndexOrThrow("fournisseur")));
+                    facture.setTypepaiement(c.getString(c.getColumnIndexOrThrow("typepaiement")));
+                    facture.setAnnee(c.getString(c.getColumnIndexOrThrow("annee")));
+                    facture.setMois(c.getString(c.getColumnIndexOrThrow("mois")));
+                    facture.setLocalState(c.getString(c.getColumnIndexOrThrow("LocalState")));
+                    facture.setSyncOnLine(c.getString(c.getColumnIndexOrThrow("SyncOnLine")));
+                    facture.setIdFacture(c.getInt(c.getColumnIndexOrThrow("idFacture")));
+                    listFacturePayer.add(facture);
+                    c.moveToNext();
+                }while (!c.isAfterLast());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return listFacturePayer;
+    }
+
+    public List<Facture> getFacturesNonPayer(){
+        List<Facture> listFactureNonPayer = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor c = db.query("facture",null,"LocalState = 'non-payer'",null, null,null, null);
+            if (c!=null && c.getCount() > 0){
+                c.moveToFirst();
+                do{
+                    Facture facture = new Facture();
+                    facture.setId(c.getInt(c.getColumnIndexOrThrow("id")));
+                    facture.setLibelle(c.getString(c.getColumnIndexOrThrow("libelle")));
+                    facture.setDatePaiement(c.getString(c.getColumnIndexOrThrow("datePaiement")));
+                    facture.setMontant(c.getString(c.getColumnIndexOrThrow("montant")));
+                    facture.setEtat(c.getString(c.getColumnIndexOrThrow("etat")));
+                    facture.setUser_id(c.getInt(c.getColumnIndexOrThrow("user_id")));
+                    facture.setFournisseur(c.getString(c.getColumnIndexOrThrow("fournisseur")));
+                    facture.setTypepaiement(c.getString(c.getColumnIndexOrThrow("typepaiement")));
+                    facture.setAnnee(c.getString(c.getColumnIndexOrThrow("annee")));
+                    facture.setMois(c.getString(c.getColumnIndexOrThrow("mois")));
+                    facture.setLocalState(c.getString(c.getColumnIndexOrThrow("LocalState")));
+                    facture.setSyncOnLine(c.getString(c.getColumnIndexOrThrow("SyncOnLine")));
+                    facture.setIdFacture(c.getInt(c.getColumnIndexOrThrow("idFacture")));
+                    listFactureNonPayer.add(facture);
+                    c.moveToNext();
+                }while (!c.isAfterLast());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return listFactureNonPayer;
+    }
+    /**
+     * Facture Tampon
+     */
+    public boolean createFactureTemp(String libelle,String datePaiement,String montant,String etat,int user_id,String fournisseur,String typepaiement,String annee,String mois,String LocalState,String SyncOnLine,int idFacture){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("libelle", libelle);
+            cv.put("datePaiement", datePaiement);
+            cv.put("montant", montant);
+            cv.put("etat", etat);
+            cv.put("user_id", user_id);
+            cv.put("fournisseur", fournisseur);
+            cv.put("typepaiement", typepaiement);
+            cv.put("annee", annee);
+            cv.put("mois", mois);
+            cv.put("LocalState", LocalState);
+            cv.put("SyncOnLine", SyncOnLine);
+            cv.put("idFacture", idFacture);
+            db.insert("factureTemp", null,cv);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public boolean deleteFactureTemp(int user_id){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("factureTemp", "user_id='"+user_id+"'",null);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Facture> getFacturesTempUser(int user_id){
+        List<Facture> listFacturePayer = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor c = db.query("factureTemp",null,"user_id='"+user_id+"'",null, null,null, null);
+            if (c!=null && c.getCount() > 0){
+                c.moveToFirst();
+                do{
+                    Facture facture = new Facture();
+                    facture.setId(c.getInt(c.getColumnIndexOrThrow("id")));
+                    facture.setLibelle(c.getString(c.getColumnIndexOrThrow("libelle")));
+                    facture.setDatePaiement(c.getString(c.getColumnIndexOrThrow("datePaiement")));
+                    facture.setMontant(c.getString(c.getColumnIndexOrThrow("montant")));
+                    facture.setEtat(c.getString(c.getColumnIndexOrThrow("etat")));
+                    facture.setUser_id(c.getInt(c.getColumnIndexOrThrow("user_id")));
+                    facture.setFournisseur(c.getString(c.getColumnIndexOrThrow("fournisseur")));
+                    facture.setTypepaiement(c.getString(c.getColumnIndexOrThrow("typepaiement")));
+                    facture.setAnnee(c.getString(c.getColumnIndexOrThrow("annee")));
+                    facture.setMois(c.getString(c.getColumnIndexOrThrow("mois")));
                     facture.setLocalState(c.getString(c.getColumnIndexOrThrow("LocalState")));
                     facture.setSyncOnLine(c.getString(c.getColumnIndexOrThrow("SyncOnLine")));
                     facture.setIdFacture(c.getInt(c.getColumnIndexOrThrow("idFacture")));
