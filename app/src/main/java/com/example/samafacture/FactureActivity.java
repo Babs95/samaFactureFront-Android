@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -33,10 +35,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class FactureActivity extends Fragment {
+import static android.content.ContentValues.TAG;
+
+public class FactureActivity extends Fragment implements NewFactureDialog.OnInputSelected {
     private RecyclerView ListFactureRecyclerView;
     private ArrayList<Facture> ListFacture;
     private BdSamaFacture bdSamaFacture;
+    private Button btnsave,btnpaye;
     ProgressBar progressBar;
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +56,8 @@ public class FactureActivity extends Fragment {
         progressBar.setIndeterminateDrawable(cubeGrid);
         progressBar.setVisibility(View.GONE);*/
         ListFactureRecyclerView = view.findViewById(R.id.ListFactRecycler);
+        btnsave = view.findViewById(R.id.btnSaveFacture);
+        btnpaye = view.findViewById(R.id.btnPayeFact);
         ListFacture = new ArrayList<>();
         ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
         for (int i=0;i<ListFacture.size();i++){
@@ -70,6 +77,15 @@ public class FactureActivity extends Fragment {
             System.out.println(ListFacture.get(i).getIdFacture());
 
         }
+        btnsave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewFactureDialog dialog = new NewFactureDialog();
+                dialog.setTargetFragment(FactureActivity.this, 1);
+                dialog.show(getFragmentManager(), "NewFactureDialog");
+            }
+        });
+
         /*Facture facture = new Facture();
         facture.setId(1);
         facture.setLibelle("Internet");
@@ -93,9 +109,25 @@ public class FactureActivity extends Fragment {
         return view;
     }
     private void initRecyclerView(){
-        MyFactureAdapter myFactureAdapter = new MyFactureAdapter(getActivity(),ListFacture);
+        ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
+        MyFactureAdapter myFactureAdapter = new MyFactureAdapter(getActivity(),ListFacture,this);
         ListFactureRecyclerView.setAdapter(myFactureAdapter);
         ListFactureRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+    @Override
+    public void sendInput(String input) {
+        Log.d(TAG, "sendInput: found incoming input: " + input);
+        System.out.println("send Input"+input);
+        getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                System.out.println("In response.isSuccessful()");
+                String message = "facture crée avec succèss";
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                initRecyclerView();
+            }
+        });
+
+    }
 }

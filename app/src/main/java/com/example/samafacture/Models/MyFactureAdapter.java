@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.samafacture.FactureActivity;
+import com.example.samafacture.PaymentDialog;
 import com.example.samafacture.R;
 
 import java.util.ArrayList;
@@ -19,9 +21,11 @@ import static com.example.samafacture.R.*;
 public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyViewHolder> {
     ArrayList<Facture> dataList;
     Context context;
-    public MyFactureAdapter(Context ctx, ArrayList<Facture> ListFacture){
+    FactureActivity fragmentFacture;
+    public MyFactureAdapter(Context ctx, ArrayList<Facture> ListFacture,FactureActivity fragment){
         dataList = ListFacture;
         context = ctx;
+        fragmentFacture=fragment;
     }
     @NonNull
     @Override
@@ -37,8 +41,10 @@ public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyVi
         holder.myTextMois.setText(dataList.get(position).getMois());
         holder.myTextDate.setText(dataList.get(position).getDatePaiement());
         holder.myTextMontant.setText(dataList.get(position).getMontant()+"f");
+
         if(dataList.get(position).getEtat().equalsIgnoreCase("Payer")){
             holder.btnPayer.setVisibility(View.INVISIBLE);
+
         }
         if(dataList.get(position).getSyncOnLine().equalsIgnoreCase("nonOk")){
             holder.myTextSynchro.setText("Non-synchroniser");
@@ -47,6 +53,14 @@ public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyVi
             holder.myTextSynchro.setText("Synchroniser");
             holder.myTextSynchro.setTextColor(context.getResources().getColor(color.colorPrimaryDark));
         }
+        holder.btnPayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PaymentDialog paymentDialog=new PaymentDialog();
+                paymentDialog.setTargetFragment(fragmentFacture, 1);
+                paymentDialog.show(fragmentFacture.getFragmentManager(), "PaymentDialog");
+            }
+        });
     }
 
     @Override

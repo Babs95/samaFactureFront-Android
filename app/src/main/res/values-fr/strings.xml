@@ -15,6 +15,9 @@
     <string name="email">Email</string>
     <string name="libelle">Libelle</string>
     <string name="menu_profil">Profil</string>
+    <string name="montant">Price</string>
+    <string name="newbill">Nouveau Facture</string>
+    <string name="paybill">Payement Facture</string>
     <string name="nouvelle_annee">Nouvelle annee</string>
     <string name="save">Enregistrer</string>
     <string name="error_fields">Champs obligatoires</string>

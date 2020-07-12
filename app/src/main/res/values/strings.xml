@@ -14,6 +14,9 @@
     <string name="last_name">Last name</string>
     <string name="email">Email</string>
     <string name="libelle">Libelle</string>
+    <string name="montant">Price</string>
+    <string name="newbill">New Bill</string>
+    <string name="paybill">Pay Bill</string>
     <string name="save">Save</string>
     <string name="error_fields">Required fields</string>
     <string name="error_parameters">Credentials error</string>
