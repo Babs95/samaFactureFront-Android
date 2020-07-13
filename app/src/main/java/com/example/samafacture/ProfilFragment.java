@@ -151,6 +151,9 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
     @Override
     public void onAnneeClick(int position) {
         UpdateYearState(ListAnnee.get(position).getId());
+        /*System.out.println("OnClick Annee");
+        System.out.println(ListAnnee.get(position).getId());
+        System.out.println(ListAnnee.get(position).getLibelle());*/
     }
 
 

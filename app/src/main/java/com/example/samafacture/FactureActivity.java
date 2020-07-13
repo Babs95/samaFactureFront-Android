@@ -31,18 +31,22 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
 
-public class FactureActivity extends Fragment implements NewFactureDialog.OnInputSelected {
+public class FactureActivity extends Fragment implements PaymentDialog.OnInputSend,NewFactureDialog.OnInputSelected, MyFactureAdapter.OnFactureListener {
     private RecyclerView ListFactureRecyclerView;
     private ArrayList<Facture> ListFacture;
+    private List<Facture> ListFacturePayer;
     private BdSamaFacture bdSamaFacture;
     private Button btnsave,btnpaye;
     ProgressBar progressBar;
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,24 +63,8 @@ public class FactureActivity extends Fragment implements NewFactureDialog.OnInpu
         btnsave = view.findViewById(R.id.btnSaveFacture);
         btnpaye = view.findViewById(R.id.btnPayeFact);
         ListFacture = new ArrayList<>();
+        ListFacturePayer = new ArrayList<>();
         ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
-        for (int i=0;i<ListFacture.size();i++){
-            System.out.println("Facture"+i);
-            System.out.println(ListFacture.get(i).getId());
-            System.out.println(ListFacture.get(i).getLibelle());
-            System.out.println(ListFacture.get(i).getDatePaiement());
-            System.out.println(ListFacture.get(i).getMontant());
-            System.out.println(ListFacture.get(i).getEtat());
-            System.out.println(ListFacture.get(i).getUser_id());
-            System.out.println(ListFacture.get(i).getFournisseur());
-            System.out.println(ListFacture.get(i).getTypepaiement());
-            System.out.println(ListFacture.get(i).getAnnee());
-            System.out.println(ListFacture.get(i).getMois());
-            System.out.println(ListFacture.get(i).getLocalState());
-            System.out.println(ListFacture.get(i).getSyncOnLine());
-            System.out.println(ListFacture.get(i).getIdFacture());
-
-        }
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,32 +73,13 @@ public class FactureActivity extends Fragment implements NewFactureDialog.OnInpu
                 dialog.show(getFragmentManager(), "NewFactureDialog");
             }
         });
-
-        /*Facture facture = new Facture();
-        facture.setId(1);
-        facture.setLibelle("Internet");
-        facture.setMontant("12.900");
-        facture.setDatePaiement("");
-        facture.setMois("Juin");
-        facture.setEtat("Non-payer");
-        facture.setSyncOnLine("nonOk");
-        Facture facture2 = new Facture();
-        facture2.setId(1);
-        facture2.setLibelle("Senelec");
-        facture2.setMontant("150.000");
-        facture2.setDatePaiement("15/07/2020");
-        facture2.setMois("Juillet");
-        facture2.setEtat("Payer");
-        facture2.setSyncOnLine("Ok");
-        ListFacture.add(facture);
-        ListFacture.add(facture2);*/
         //Initialisation RecyclerViewFacture
         initRecyclerView();
         return view;
     }
     private void initRecyclerView(){
         ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
-        MyFactureAdapter myFactureAdapter = new MyFactureAdapter(getActivity(),ListFacture,this);
+        MyFactureAdapter myFactureAdapter = new MyFactureAdapter(getActivity(),ListFacture,this, (MyFactureAdapter.OnFactureListener) this);
         ListFactureRecyclerView.setAdapter(myFactureAdapter);
         ListFactureRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -129,5 +98,94 @@ public class FactureActivity extends Fragment implements NewFactureDialog.OnInpu
             }
         });
 
+    }
+
+    @Override
+    public void onFactureClick(int position) {
+        /*System.out.println("OnClick Facture");
+        System.out.println(ListFacture.get(position).getId());
+        System.out.println(ListFacture.get(position).getMontant());*/
+    }
+
+    @Override
+    public void sendBabs(String input) {
+        Log.d(TAG, "sendBabs: found incoming input: " + input);
+        System.out.println("send Babs"+input);
+        getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                String message = "Facture payé avec succèss";
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                initRecyclerView();
+                GetFacturePayer();
+            }
+        });
+    }
+
+    public void GetFacturePayer() {
+        ListFacturePayer = bdSamaFacture.getFacturesPayer();
+        for (int i=0;i<ListFacturePayer.size();i++){
+            String postBody="{\n" +
+                    "    \"libelle\": \""+ListFacturePayer.get(i).getLibelle()+"\",\n" +
+                    "    \"datePaiement\": \""+ListFacturePayer.get(i).getDatePaiement()+"\",\n" +
+                    "    \"montant\": \""+ListFacturePayer.get(i).getMontant()+"\",\n" +
+                    "    \"etat\": \""+ListFacturePayer.get(i).getEtat()+"\",\n" +
+                    "    \"user_id\": \""+ListFacturePayer.get(i).getUser_id()+"\",\n" +
+                    "    \"fournisseur\": \""+ListFacturePayer.get(i).getFournisseur()+"\",\n" +
+                    "    \"typepaiement\": \""+ListFacturePayer.get(i).getTypepaiement()+"\",\n" +
+                    "    \"mois\": \""+ListFacturePayer.get(i).getMois()+"\"\n" +
+                    "}";
+            SynchroniserFacture(postBody);
+        }
+        initRecyclerView();
+    }
+
+    public void SynchroniserFacture(String postBody) {
+        try {
+
+            String url = "https://api-samafacture.herokuapp.com/api/facture/store";
+            OkHttpClient client = new OkHttpClient();
+            RequestBody body = RequestBody.create(JSON, postBody);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, final IOException e) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String error = getString(R.string.error_connection);
+                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    System.out.println("In onResponse");
+                    try {
+                        //final String babs = response.body().string();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                System.out.println("In response.isSuccessful()");
+                                String message = "Facture synchroniser avec succèss";
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+
+                }
+            });
+
+        } catch (Exception e){
+
+        }
     }
 }

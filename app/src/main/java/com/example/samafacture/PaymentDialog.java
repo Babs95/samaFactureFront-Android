@@ -6,135 +6,116 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.io.IOException;
+import com.example.samafacture.Models.Facture;
+import com.example.samafacture.Models.MyFactureAdapter;
+import com.example.samafacture.Models.Typepaiment;
+import com.example.samafacture.SqLiteDatabase.BdSamaFacture;
 
-import okhttp3.Call;
-import okhttp3.Callback;
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
-public class PaymentDialog extends DialogFragment {
+public class PaymentDialog extends DialogFragment implements MyFactureAdapter.OnFactureListener {
     private static final String TAG = "PaymentDialog";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public interface OnInputSelected{
-        void sendInput(String input);
+
+    @Override
+    public void onFactureClick(int position) {
+        ///System.out.println("OnClick Facture");
+        //System.out.println(ListFacture.get(position).getId());
+        //System.out.println(ListFacture.get(position).getMontant());
+        //ListFacture.get(position).getId();
+        //txtMontantFact.setText(ListFacture.get(position).getMontant());
     }
-    public OnInputSelected mOnInputSelected;
+
+    public interface OnInputSend{
+        void sendBabs(String input);
+    }
+    public OnInputSend mOnInputSelected;
+
+    //Constructeur
+    /*public PaymentDialog(String text){
+        txtMontantFact.setText(text);
+    }*/
 
     //widgets
-    private EditText mInput;
-    private CheckBox actif,inactif;
-    private TextView mActionOk, mActionCancel;
-    private String etat,babs;
+    private EditText txtMontantFact, txtFourFact;
+    private Button btnPayBill;
+    private String babs,typepaiement;
+    private Spinner spinnerTypePaiement;
+    private List<String> ListT;
+    private List<Typepaiment>ListTypePaiement;
+    private BdSamaFacture bdSamaFacture;
+    private ArrayList<Facture> ListFacture;
+    private int idFact = 0;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.payment_dialog, container, false);
-        mActionOk = view.findViewById(R.id.action_ok);
-        mActionCancel = view.findViewById(R.id.action_cancel);
-        mInput = view.findViewById(R.id.inputAnnee);
-        actif = view.findViewById(R.id.inputActive);
-        inactif = view.findViewById(R.id.inputInactive);
+        txtMontantFact = view.findViewById(R.id.inputMontantFact);
+        txtFourFact = view.findViewById(R.id.inputFourFact);
+        btnPayBill = view.findViewById(R.id.btnPayeBill);
+        bdSamaFacture = new BdSamaFacture(getActivity());
+        ListTypePaiement = new ArrayList<>();
+        ListT = new ArrayList<>();
+        //Chargement ListFactures
+        ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
+        spinnerTypePaiement = (Spinner) view.findViewById(R.id.spinner_typepaiement);
 
-      /*  mActionCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: closing dialog");
-                getDialog().dismiss();
-            }
-        });
+        Bundle bundle = getArguments();
+        System.out.println("Send Babs"+bundle.getString("Montant",""));
+        txtMontantFact.setText(bundle.getString("Montant",""));
+        txtFourFact.setText(bundle.getString("Fournisseur",""));
+        idFact =  bundle.getInt("Id",0);
+        //String imageLink = bundle.getString("Montant","");
 
-        mActionOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    etat="";
-                    babs =mInput.getText().toString().trim();
-                if (actif.isChecked()) {
-                    etat= actif.getText().toString().trim()+"";
-                }
-                if (inactif.isChecked()) {
-                    etat= inactif.getText().toString().trim()+"";
-                }
-                String postBody="{\n" +
-                        "    \"libelle\": \""+mInput.getText().toString().trim()+"\",\n" +
-                        "    \"etat\": \""+etat+"\"\n" +
-                        "}";
-                System.out.println(postBody);
-                postAnnee(postBody);
-
-                /*ProfilFragment p = new ProfilFragment();
-                p.loadRecyclerViewData();
-
-                getDialog().dismiss();
-
-            }
-        });
-*/
-        return view;
-    }
-    public void postAnnee(String postBody) {
-        try {
-
-            String url = "https://api-samafacture.herokuapp.com/api/annee/store";
-            OkHttpClient client = new OkHttpClient();
-            RequestBody body = RequestBody.create(JSON, postBody);
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(body)
-                    .build();
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, final IOException e) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String error = getString(R.string.error_connection);
-                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    System.out.println("In onResponse");
-                    //mOnInputSelected.sendInput(mInput.getText().toString());
-                    try {
-                        //final String babs = response.body().string();
-                        if(getActivity() == null){
-                            mOnInputSelected.sendInput(babs);
-                        }
-
-
-                    }catch (Exception e){
-                        System.out.println(e);
-                    }
-
-                }
-            });
-
-
-        } catch (Exception e){
-
+        //Chargement Spinner Typepaiement from Database
+        ListTypePaiement = bdSamaFacture.ListTypePaiement();
+        for (int i=0;i<ListTypePaiement.size();i++){
+            ListT.add(ListTypePaiement.get(i).getLibelle());
         }
+        spinnerTypePaiement.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListT));
+        spinnerTypePaiement.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                typepaiement= spinnerTypePaiement.getItemAtPosition(spinnerTypePaiement.getSelectedItemPosition()).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // DO Nothing here
+            }
+        });
+
+
+        btnPayBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                babs = "cool";
+                bdSamaFacture.updateFacture(idFact,"payer",typepaiement,"payer","nonOk");
+                mOnInputSelected.sendBabs(babs);
+                getDialog().dismiss();
+
+            }
+        });
+        return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            mOnInputSelected = (OnInputSelected) getTargetFragment();
+            mOnInputSelected = (OnInputSend) getTargetFragment();
         }catch (ClassCastException e){
             Log.e(TAG, "onAttach: ClassCastException : " + e.getMessage() );
         }

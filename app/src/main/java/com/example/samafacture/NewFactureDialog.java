@@ -14,7 +14,6 @@ import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import android.content.Context;
 import android.os.Build;
@@ -26,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,14 +33,11 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.samafacture.Models.Facture;
 import com.example.samafacture.Models.Fournisseur;
 import com.example.samafacture.Models.Mois;
-import com.example.samafacture.Models.MyFactureAdapter;
-import com.example.samafacture.Models.Typepaiment;
 import com.example.samafacture.Models.User;
 import com.example.samafacture.SqLiteDatabase.BdSamaFacture;
 import com.google.gson.Gson;
@@ -84,30 +79,27 @@ public class NewFactureDialog extends DialogFragment  {
         ListF = new ArrayList<>();
         txtmontant = view.findViewById(R.id.txt_input_montant);
         spinnerMois = (Spinner) view.findViewById(R.id.txt_input_mois);
-        spinnerFour = (Spinner) view.findViewById(R.id.txt_input_fournisseur);
-        loadSpinnerDataMois();
-        loadSpinnerDataFournisseur();
+        spinnerFour = (Spinner) view.findViewById(R.id.spinner_typepaiement);
+        //loadSpinnerDataMois();
+        //loadSpinnerDataFournisseur();
 
 
         ListFacture = new ArrayList<>();
         ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
-        /*for (int i=0;i<ListFacture.size();i++){
-            System.out.println("Facture"+i);
-            System.out.println(ListFacture.get(i).getId());
-            System.out.println(ListFacture.get(i).getLibelle());
-            System.out.println(ListFacture.get(i).getDatePaiement());
-            System.out.println(ListFacture.get(i).getMontant());
-            System.out.println(ListFacture.get(i).getEtat());
-            System.out.println(ListFacture.get(i).getUser_id());
-            System.out.println(ListFacture.get(i).getFournisseur());
-            System.out.println(ListFacture.get(i).getTypepaiement());
-            System.out.println(ListFacture.get(i).getAnnee());
-            System.out.println(ListFacture.get(i).getMois());
-            System.out.println(ListFacture.get(i).getLocalState());
-            System.out.println(ListFacture.get(i).getSyncOnLine());
-            System.out.println(ListFacture.get(i).getIdFacture());
+        //Chargement Spinner Mois from Database
+        ListMois = bdSamaFacture.ListMois();
+        for (int i=0;i<ListMois.size();i++){
+            ListM.add(ListMois.get(i).getLibelle());
+        }
+        spinnerMois.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListM));
 
-        }*/
+        //Chargement Spinner Fournisseur from Database
+        ListFournisseur = bdSamaFacture.ListFournisseur();
+        for (int i=0;i<ListFournisseur.size();i++){
+            ListF.add(ListFournisseur.get(i).getLibelle());
+        }
+        spinnerFour.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListF));
+
         spinnerFour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -183,17 +175,18 @@ public class NewFactureDialog extends DialogFragment  {
 
                        for(int i=0;i<jsonArray.length();i++){
                            JSONObject jsonObject1=jsonArray.getJSONObject(i);
-                           String type=jsonObject1.getString("libelle");
-                           System.out.println(type);
-                           ListM.add(type);
+                           //String moisLib=jsonObject1.getString("libelle");
+                           //ListM.add(type);
                            Gson gson=new Gson();
                            Mois mois = gson.fromJson(jsonObject1.toString(), Mois.class);
-                           ListMois.add(mois);
+                           //ListMois.add(mois);
+                           bdSamaFacture.createMois(mois.getLibelle(),mois.getId());
                        }
                    }
                    getActivity().runOnUiThread(new Runnable() {
                        @Override
                        public void run() {
+                           //ListM
                            spinnerMois.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListM));
                        }
                    });
@@ -230,7 +223,7 @@ public class NewFactureDialog extends DialogFragment  {
                             JSONObject jsonObject1=jsonArray.getJSONObject(i);
                             String type=jsonObject1.getString("libelle");
                             System.out.println(type);
-                            ListF.add(type);
+                            //ListF.add(type);
                             Gson gson=new Gson();
                             Fournisseur f = gson.fromJson(jsonObject1.toString(), Fournisseur.class);
                             ListFournisseur.add(f);
@@ -239,7 +232,7 @@ public class NewFactureDialog extends DialogFragment  {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            spinnerFour.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListF));
+                            //spinnerFour.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListF));
                         }
                     });
                 }catch (JSONException e){e.printStackTrace();}

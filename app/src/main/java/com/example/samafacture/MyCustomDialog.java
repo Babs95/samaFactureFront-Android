@@ -24,8 +24,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.example.samafacture.InscriptionActivity.JSON;
-
 public class MyCustomDialog extends DialogFragment {
     private static final String TAG = "MyCustomDialog";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -46,7 +44,7 @@ public class MyCustomDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.my_custom_dialog, container, false);
         mActionOk = view.findViewById(R.id.action_ok);
         mActionCancel = view.findViewById(R.id.action_cancel);
-        mInput = view.findViewById(R.id.inputAnnee);
+        mInput = view.findViewById(R.id.inputMontantFact);
         actif = view.findViewById(R.id.inputActive);
         inactif = view.findViewById(R.id.inputInactive);
 

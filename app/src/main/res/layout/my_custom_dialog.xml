@@ -20,7 +20,7 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/inputAnnee"
+            android:id="@+id/inputMontantFact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/heading"
@@ -36,7 +36,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="20dp"
-            android:layout_below="@id/inputAnnee"
+            android:layout_below="@id/inputMontantFact"
             android:text="Actif" />
         <CheckBox
             android:id="@+id/inputInactive"
@@ -45,7 +45,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="20dp"
-            android:layout_below="@id/inputAnnee"
+            android:layout_below="@id/inputMontantFact"
             android:text="Non-Actif" />
 
         <TextView

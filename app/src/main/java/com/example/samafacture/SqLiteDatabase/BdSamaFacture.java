@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.samafacture.Models.Facture;
+import com.example.samafacture.Models.Fournisseur;
+import com.example.samafacture.Models.Mois;
+import com.example.samafacture.Models.Typepaiment;
 import com.example.samafacture.Models.User;
 
 import java.util.ArrayList;
@@ -26,6 +29,9 @@ public class BdSamaFacture extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS facture (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,datePaiement TEXT,montant TEXT,etat TEXT,user_id INTEGER,fournisseur TEXT,typepaiement TEXT,annee TEXT,mois TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER);");
         db.execSQL("CREATE TABLE IF NOT EXISTS annee (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,etat TEXT);");
         db.execSQL("CREATE TABLE IF NOT EXISTS factureTemp (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,datePaiement TEXT,montant TEXT,etat TEXT,user_id INTEGER,fournisseur TEXT,typepaiement TEXT,annee TEXT,mois TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS fournisseur (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,fournisseur_id INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS mois (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,mois_id INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS typepaiement (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,typepaiement_id INTEGER);");
     }
 
     @Override
@@ -113,6 +119,256 @@ public class BdSamaFacture extends SQLiteOpenHelper {
         }
         return listUsers;
     }
+    /**
+     * End Table User
+     */
+
+    /**
+     * Table Fournisseur
+     */
+    public boolean createFournisseur(String libelle,Integer fournisseur_id){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("libelle", libelle);
+            cv.put("fournisseur_id", fournisseur_id);
+            db.insert("fournisseur", null,cv);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean updateFournisseur(Integer fournisseur_id,String libelle) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("libelle", libelle);
+            db.update("fournisseur", cv, "fournisseur_id='" + fournisseur_id + "'", null);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Fournisseur> ListFournisseur(){
+        List<Fournisseur> listFournisseurs = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor c = db.query("fournisseur",null,null,null, null,null, null);
+            if (c!=null && c.getCount()>0){
+                //Ici on déplace le cursor au premier élément car on ne sait pas là ou il pointe
+                c.moveToFirst();
+                do {
+                    Fournisseur fournisseur = new Fournisseur();
+                    fournisseur.setId(c.getInt(c.getColumnIndex("id")));
+                    fournisseur.setLibelle(c.getString(c.getColumnIndex("libelle")));
+                    fournisseur.setFournisseur_id(c.getInt(c.getColumnIndex("fournisseur_id")));
+                    listFournisseurs.add(fournisseur);
+                    c.moveToNext();
+                }while (!c.isAfterLast() );
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return listFournisseurs;
+    }
+
+    public boolean deleteFournisseur(Integer fournisseur_id){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("fournisseur", "fournisseur_id='"+fournisseur_id+"'",null);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteAllFournisseur(){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("fournisseur", null,null);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    /**
+     * End Table Fournisseur
+     */
+
+
+    /**
+     * Table Mois
+     */
+    public boolean createMois(String libelle,Integer mois_id){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("libelle", libelle);
+            cv.put("mois_id", mois_id);
+            db.insert("mois", null,cv);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean updateMois(Integer mois_id,String libelle) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("libelle", libelle);
+            db.update("mois", cv, "mois_id='" + mois_id + "'", null);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Mois> ListMois(){
+        List<Mois> listMois = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor c = db.query("mois",null,null,null, null,null, null);
+            if (c!=null && c.getCount()>0){
+                //Ici on déplace le cursor au premier élément car on ne sait pas là ou il pointe
+                c.moveToFirst();
+                do {
+                    Mois mois = new Mois();
+                    mois.setId(c.getInt(c.getColumnIndex("id")));
+                    mois.setLibelle(c.getString(c.getColumnIndex("libelle")));
+                    mois.setMois_id(c.getInt(c.getColumnIndex("mois_id")));
+                    listMois.add(mois);
+                    c.moveToNext();
+                }while (!c.isAfterLast() );
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return listMois;
+    }
+
+    public boolean deleteMois(Integer mois_id){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("mois", "mois_id='"+mois_id+"'",null);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteAllMois(){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("mois", null,null);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    /**
+     * End Table Mois
+     */
+
+    /**
+     * Table Type Paiement
+     */
+    public boolean createTypePaiement(String libelle,Integer typepaiement_id){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("libelle", libelle);
+            cv.put("typepaiement_id", typepaiement_id);
+            db.insert("typepaiement", null,cv);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean updateTypePaiement(Integer typepaiement_id,String libelle) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("libelle", libelle);
+            db.update("typepaiement", cv, "typepaiement_id='" + typepaiement_id + "'", null);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Typepaiment> ListTypePaiement(){
+        List<Typepaiment> listTypepaiement = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor c = db.query("typepaiement",null,null,null, null,null, null);
+            if (c!=null && c.getCount()>0){
+                //Ici on déplace le cursor au premier élément car on ne sait pas là ou il pointe
+                c.moveToFirst();
+                do {
+                    Typepaiment typepaiment = new Typepaiment();
+                    typepaiment.setId(c.getInt(c.getColumnIndex("id")));
+                    typepaiment.setLibelle(c.getString(c.getColumnIndex("libelle")));
+                    typepaiment.setTypepaiement_id(c.getInt(c.getColumnIndex("typepaiement_id")));
+                    listTypepaiement.add(typepaiment);
+                    c.moveToNext();
+                }while (!c.isAfterLast() );
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return listTypepaiement;
+    }
+
+    public boolean deleteTypePaiement(Integer typepaiement_id){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("typepaiement", "typepaiement_id='"+typepaiement_id+"'",null);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteAllTypePaiement(){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("typepaiement", null,null);
+            db.close();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    /**
+     * End Table Type Paiement
+     */
 
     /**
      *
@@ -142,22 +398,14 @@ public class BdSamaFacture extends SQLiteOpenHelper {
             return false;
         }
     }
-    public boolean updateFacture(int id,String libelle,String datePaiement,String montant,String etat,int user_id,String fournisseur,String typepaiement,String annee,String mois,String LocalState,String SyncOnLine,int idFacture){
+    public boolean updateFacture(int id,String etat,String typepaiement,String LocalState,String SyncOnLine){
             try {
                 SQLiteDatabase db = this.getWritableDatabase();
                 ContentValues cv = new ContentValues();
-                cv.put("libelle", libelle);
-                cv.put("datePaiement", datePaiement);
-                cv.put("montant", montant);
                 cv.put("etat", etat);
-                cv.put("user_id", user_id);
-                cv.put("fournisseur", fournisseur);
                 cv.put("typepaiement", typepaiement);
-                cv.put("annee", annee);
-                cv.put("mois", mois);
                 cv.put("LocalState", LocalState);
                 cv.put("SyncOnLine", SyncOnLine);
-                cv.put("idFacture", idFacture);
                 db.update("facture", cv, "id='"+id+"'",null);
                 db.close();
                 return true;
@@ -275,7 +523,12 @@ public class BdSamaFacture extends SQLiteOpenHelper {
         return listFactureNonPayer;
     }
     /**
-     * Facture Tampon
+     * End Table Facture
+     */
+
+
+    /**
+     * Table Facture Tampon
      */
     public boolean createFactureTemp(String libelle,String datePaiement,String montant,String etat,int user_id,String fournisseur,String typepaiement,String annee,String mois,String LocalState,String SyncOnLine,Integer idFacture){
         try {

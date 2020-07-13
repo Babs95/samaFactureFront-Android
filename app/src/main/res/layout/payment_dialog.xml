@@ -8,67 +8,103 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="238dp"
+        android:layout_height="500dp"
+        android:background="@drawable/welcomepage"
         android:padding="10dp">
+
         <TextView
-            android:textStyle="bold"
-            android:textSize="@dimen/size_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/paybill"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="@dimen/size_title"
+            android:textStyle="bold">
 
         </TextView>
+
         <TextView
             android:id="@+id/heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/montant"
             android:layout_marginTop="50dp"
-            android:textColor="#000"
-            android:textSize="18sp" />
+            android:text="@string/montant"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/heading2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="270dp"
+            android:text="@string/payment_method"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/inputAnnee"
+            android:id="@+id/inputMontantFact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/heading"
             android:layout_marginTop="20dp"
             android:background="@null"
             android:hint="@string/montant"
-            android:textColor="#000" />
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/inputFourFact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/heading"
+            android:layout_marginTop="115dp"
+            android:background="@null"
+            android:hint="@string/montant"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textStyle="bold" />
 
         <TextView
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fournisseur"
             android:layout_marginTop="150dp"
-            android:textColor="#000"
-            android:textSize="18sp" />
+            android:text="Fournisseur"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/txt_input_fournisseur"
-            android:inputType="number"
+            android:id="@+id/spinner_typepaiement"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginLeft="4dp"
+            android:layout_marginTop="300dp"
             android:layout_marginRight="4dp"
-            android:layout_marginTop="200dp"
-            android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif"
-            />
+            android:inputType="text" />
+
         <Button
-            android:layout_width="match_parent"
+            android:id="@+id/btnPayeBill"
+            android:layout_width="116dp"
             android:layout_height="wrap_content"
-
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="250dp"
+            android:layout_marginTop="402dp"
+            android:layout_marginEnd="11dp"
+            android:layout_marginRight="11dp"
+            android:background="@color/colorPrimaryDark"
             android:fontFamily="sans-serif-smallcaps"
-            android:hint="@string/save"/>
-
+            android:hint="@string/paybill"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textStyle="bold" />
 
 
     </RelativeLayout>

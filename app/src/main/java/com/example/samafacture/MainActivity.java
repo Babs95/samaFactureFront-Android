@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -63,12 +64,17 @@ public class MainActivity extends AppCompatActivity {
         btnConnect = findViewById(R.id.btnConnect);
         btnSignIn = findViewById(R.id.btnSignIn);
 
+        //Chargement des mois,fournisseurs et typepaiement dans les tables sqlite
+        loadSpinnerDataMois();
+        loadSpinnerDataFournisseur();
+        loadSpinnerDataTypePaiement();
         //givenUsingTimer__whenSchedulingRepeatedTask__thenCorrect();
         //Progessbar
         progressBar = (ProgressBar)findViewById(R.id.spin_kit);
         Wave wave = new Wave();
         progressBar.setIndeterminateDrawable(wave);
         progressBar.setVisibility(View.GONE);
+
 
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -359,6 +365,146 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             //progressBar.setVisibility(View.GONE);
                             //initRecyclerView();
+                        }
+                    });
+                }catch (JSONException e){e.printStackTrace();}
+            }
+        });
+    }
+
+    /**
+     * Remplissage Table Fournisseur,Mois & Typepaiement
+     */
+    private void loadSpinnerDataMois() {
+        String url = "https://api-samafacture.herokuapp.com/api/mois/getall";
+        OkHttpClient  client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+               runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String error = getString(R.string.error_connection);
+                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try{
+                    bdSamaFacture.deleteAllMois();
+                    JSONObject jsonObject=new JSONObject(response.body().string());
+                    if(jsonObject.getInt("success")==1){
+                        JSONArray jsonArray=jsonObject.getJSONArray("Mois");
+
+                        for(int i=0;i<jsonArray.length();i++){
+                            JSONObject jsonObject1=jsonArray.getJSONObject(i);
+                            //String moisLib=jsonObject1.getString("libelle");
+                            //ListM.add(type);
+                            Gson gson=new Gson();
+                            Mois mois = gson.fromJson(jsonObject1.toString(), Mois.class);
+                            //ListMois.add(mois);
+                            bdSamaFacture.createMois(mois.getLibelle(),mois.getId());
+                        }
+                    }
+                        runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //ListM
+                            //spinnerMois.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListM));
+                        }
+                    });
+                }catch (JSONException e){e.printStackTrace();}
+            }
+        });
+    }
+    private void loadSpinnerDataFournisseur() {
+        String url = "https://api-samafacture.herokuapp.com/api/fournisseur/getall";
+        OkHttpClient  client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String error = getString(R.string.error_connection);
+                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try{
+                    bdSamaFacture.deleteAllFournisseur();
+                    JSONObject jsonObject=new JSONObject(response.body().string());
+                    if(jsonObject.getInt("success")==1){
+                        JSONArray jsonArray=jsonObject.getJSONArray("Fournisseur");
+
+                        for(int i=0;i<jsonArray.length();i++){
+                            JSONObject jsonObject1=jsonArray.getJSONObject(i);
+                            //String fourniss=jsonObject1.getString("libelle");
+                            Gson gson=new Gson();
+                            Fournisseur f = gson.fromJson(jsonObject1.toString(), Fournisseur.class);
+                            bdSamaFacture.createFournisseur(f.getLibelle(),f.getId());
+                        }
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //spinnerFour.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListF));
+                        }
+                    });
+                }catch (JSONException e){e.printStackTrace();}
+            }
+        });
+
+    }
+    private void loadSpinnerDataTypePaiement() {
+        String url = "https://api-samafacture.herokuapp.com/api/typepaiement/getall";
+        OkHttpClient  client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String error = getString(R.string.error_connection);
+                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try{
+                    bdSamaFacture.deleteAllTypePaiement();
+                    JSONObject jsonObject=new JSONObject(response.body().string());
+                    if(jsonObject.getInt("success")==1){
+                        JSONArray jsonArray=jsonObject.getJSONArray("TypePaiement");
+
+                        for(int i=0;i<jsonArray.length();i++){
+                            JSONObject jsonObject1=jsonArray.getJSONObject(i);
+                            Gson gson=new Gson();
+                            Typepaiment typepaiment = gson.fromJson(jsonObject1.toString(), Typepaiment.class);
+                            bdSamaFacture.createTypePaiement(typepaiment.getLibelle(),typepaiment.getId());
+                        }
+
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //spinner.setAdapter(new ArrayAdapter<String>(SignInActivity.this, android.R.layout.simple_spinner_dropdown_item, TypePaiement));
                         }
                     });
                 }catch (JSONException e){e.printStackTrace();}
