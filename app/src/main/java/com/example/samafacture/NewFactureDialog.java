@@ -91,7 +91,7 @@ public class NewFactureDialog extends DialogFragment  {
 
         ListFacture = new ArrayList<>();
         ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
-        for (int i=0;i<ListFacture.size();i++){
+        /*for (int i=0;i<ListFacture.size();i++){
             System.out.println("Facture"+i);
             System.out.println(ListFacture.get(i).getId());
             System.out.println(ListFacture.get(i).getLibelle());
@@ -107,12 +107,11 @@ public class NewFactureDialog extends DialogFragment  {
             System.out.println(ListFacture.get(i).getSyncOnLine());
             System.out.println(ListFacture.get(i).getIdFacture());
 
-        }
+        }*/
         spinnerFour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
              fournisseur= spinnerFour.getItemAtPosition(spinnerFour.getSelectedItemPosition()).toString();
-           //   spinnerMois.getItemAtPosition(spinnerMois.getSelectedItemPosition()).toString();
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -143,9 +142,9 @@ public class NewFactureDialog extends DialogFragment  {
                 List<User> ListUserConnected = bdSamaFacture.ListUser();
                 int IdUser=0;
                 for (int i=0;i<ListUserConnected.size();i++) {
-                    IdUser=ListUserConnected.get(i).getId();
+                    IdUser=ListUserConnected.get(i).getUser_id();
                 }
-              bdSamaFacture.createFacture(libelle,dtf.format(now),montant,"non-payer",IdUser,fournisseur,null,null,mois,"non-payer","nonOk",0);
+              bdSamaFacture.createFacture(libelle,dtf.format(now),montant,"non-payer",IdUser,fournisseur,null,null,mois,"non-payer","nonOk",null);
               mOnInputSelected.sendInput(babs);
                 getDialog().dismiss();
 

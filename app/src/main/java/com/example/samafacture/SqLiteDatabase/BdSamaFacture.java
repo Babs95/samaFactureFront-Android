@@ -23,9 +23,9 @@ public class BdSamaFacture extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT,nom TEXT,prenom TEXT,email TEXT,login VARCHAR(30),password VARCHAR(20),user_id INTEGER);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS facture (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,datePaiement TEXT,montant TEXT,etat TEXT,user_id INTEGER,fournisseur TEXT,typepaiement TEXT,annee TEXT,mois TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER UNIQUE);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS facture (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,datePaiement TEXT,montant TEXT,etat TEXT,user_id INTEGER,fournisseur TEXT,typepaiement TEXT,annee TEXT,mois TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER);");
         db.execSQL("CREATE TABLE IF NOT EXISTS annee (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,etat TEXT);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS factureTemp (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,datePaiement TEXT,montant TEXT,etat TEXT,user_id INTEGER,fournisseur TEXT,typepaiement TEXT,annee TEXT,mois TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER UNIQUE);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS factureTemp (id INTEGER PRIMARY KEY AUTOINCREMENT,libelle TEXT,datePaiement TEXT,montant TEXT,etat TEXT,user_id INTEGER,fournisseur TEXT,typepaiement TEXT,annee TEXT,mois TEXT,LocalState TEXT,SyncOnLine TEXT,idFacture INTEGER);");
     }
 
     @Override
@@ -118,7 +118,7 @@ public class BdSamaFacture extends SQLiteOpenHelper {
      *
      * Table Facture
      */
-    public boolean createFacture(String libelle,String datePaiement,String montant,String etat,int user_id,String fournisseur,String typepaiement,String annee,String mois,String LocalState,String SyncOnLine,int idFacture){
+    public boolean createFacture(String libelle, String datePaiement, String montant, String etat, int user_id, String fournisseur, String typepaiement, String annee, String mois, String LocalState, String SyncOnLine, Integer idFacture){
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
@@ -277,7 +277,7 @@ public class BdSamaFacture extends SQLiteOpenHelper {
     /**
      * Facture Tampon
      */
-    public boolean createFactureTemp(String libelle,String datePaiement,String montant,String etat,int user_id,String fournisseur,String typepaiement,String annee,String mois,String LocalState,String SyncOnLine,int idFacture){
+    public boolean createFactureTemp(String libelle,String datePaiement,String montant,String etat,int user_id,String fournisseur,String typepaiement,String annee,String mois,String LocalState,String SyncOnLine,Integer idFacture){
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();

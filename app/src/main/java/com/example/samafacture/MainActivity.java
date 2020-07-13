@@ -3,8 +3,10 @@ package com.example.samafacture;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         btnConnect = findViewById(R.id.btnConnect);
         btnSignIn = findViewById(R.id.btnSignIn);
 
-        givenUsingTimer__whenSchedulingRepeatedTask__thenCorrect();
+        //givenUsingTimer__whenSchedulingRepeatedTask__thenCorrect();
         //Progessbar
         progressBar = (ProgressBar)findViewById(R.id.spin_kit);
         Wave wave = new Wave();
@@ -108,6 +110,16 @@ public class MainActivity extends AppCompatActivity {
         long period = 1000L;
         timer.scheduleAtFixedRate(repeatedTask, delay, period);
     }
+    private String isNetworkConnected() {
+        String connection;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()){
+            connection = "Connected";
+        }else {
+            connection = "Not Connected";
+        }
+        return connection;
+    }
 
     public void  authentification(String login, String password) {
         //new YourAsyncTask().execute();
@@ -141,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     int idBabs = 0;
+                    int idLastUser = 0;
                     try {
                         JSONObject jo = new JSONObject(response.body().string());
                         String status = jo.getString("status");
@@ -184,21 +197,31 @@ public class MainActivity extends AppCompatActivity {
                                             break;
                                         }else {
                                             currentUser = false;
+                                            idLastUser =LisFact.get(j).getUser_id();
+                                            System.out.println("Id Last User"+idLastUser);
                                         }
 
                                     }
                                     if(currentUser == true){
                                         System.out.println("Current = true");
+                                        bdSamaFacture.deleteFactureTemp(idBabs);
                                         //Dans ce for on garde les factures non-payer du utilisateur toujours connecté
+                                        System.out.println("Avant for");
                                         for (int p=0;p<LisFact.size();p++){
+                                            System.out.println("Dans for");
+                                            System.out.println(LisFact.get(p).getLibelle());
+                                            System.out.println(LisFact.get(p).getEtat());
                                             if(LisFact.get(p).getEtat().equalsIgnoreCase("non-payer")){
+                                                System.out.println("Dans if");
                                                 bdSamaFacture.createFactureTemp(LisFact.get(p).getLibelle(),LisFact.get(p).getDatePaiement(),LisFact.get(p).getMontant(),LisFact.get(p).getEtat(),LisFact.get(p).getUser_id(),LisFact.get(p).getFournisseur(),LisFact.get(p).getTypepaiement(),LisFact.get(p).getAnnee(),LisFact.get(p).getMois(),LisFact.get(p).getLocalState(),LisFact.get(p).getSyncOnLine(),LisFact.get(p).getIdFacture());
                                             }
                                         }
                                         bdSamaFacture.deleteFacture();
 
                                         List<Facture> LisFactTemp =  bdSamaFacture.getFacturesTempUser(idBabs);
-                                        if(LisFactTemp != null){
+                                        System.out.println("Avant If LisFactTemp !null");
+                                        if(LisFactTemp != null && !LisFactTemp.isEmpty()){
+                                            System.out.println("Avant for Temp");
                                             for (int k=0;k<LisFactTemp.size();k++){
                                                     System.out.println("Facture Non payer UserCurrent");
                                                     System.out.println(LisFactTemp.get(k).getId());
@@ -209,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
                                             bdSamaFacture.deleteFactureTemp(idBabs);
                                         }
                                     }else {
+                                        bdSamaFacture.deleteFactureTemp(idLastUser);
                                         System.out.println("Current = false");
                                         //Dans ce for on garde les factures non-payer du dernier utilisateur connecté
                                         for (int l=0;l<LisFact.size();l++){
@@ -219,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                                         bdSamaFacture.deleteFacture();
                                         //Dans ce for on charge les factures non payer du nouveau utilisateur connecté
                                         List<Facture> LisFactTemp2 =  bdSamaFacture.getFacturesTempUser(idBabs);
-                                        if(LisFactTemp2 != null){
+                                        if(LisFactTemp2 != null && !LisFactTemp2.isEmpty()){
                                             for (int m=0;m<LisFactTemp2.size();m++){
                                                 System.out.println("Facture Non payer Nouveau User");
                                                 System.out.println(LisFactTemp2.get(m).getId());
