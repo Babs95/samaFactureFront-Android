@@ -4,6 +4,7 @@
     <string name="my_facture">My Bills</string>
     <string name="new_facture">New Bill</string>
     <string name="payment_method">Payment method</string>
+    <string name="search">Search here !!!!</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="connect">Connect</string>
@@ -27,6 +28,8 @@
     <string name="welcome">Welcome</string>
     <string name="wait">Please wait</string>
     <string name="success_save">Successfully</string>
+    <string name="home_welcome">Sama Facture is an application that will allow you to manage all your invoices from your different suppliers in order to make your life easier.</string>
+    <string name="help_text">In order to take full advantage of the application, please always configure the current year at the profile page so that all of your invoices differ according to the year. This application also offers you the possibility of recording and pay your invoices in offline mode and synchronize them once the internet connection is available all thanks to the on-board SqLite database</string>
     <string name="title_activity_nav_bar">NavBarActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

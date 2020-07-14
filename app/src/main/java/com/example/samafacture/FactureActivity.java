@@ -57,6 +57,7 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
     MyFactureAdapter myFactureAdapter;
     private EditText SearchText;
     boolean VerifConnection;
+    //private
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -217,15 +218,21 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
             //initRecyclerView();
         }
     }
-    private boolean isNetworkConnected() {
+    private boolean isNetworkConnected() throws NullPointerException {
         boolean connection = false;
         //if(getActivity() !=null){
-            ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        try {
+            ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
             if(cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()){
                 connection = true;
             }else {
                 connection = false;
             }
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
         //}
         return connection;
     }

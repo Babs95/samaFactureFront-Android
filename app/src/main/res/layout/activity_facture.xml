@@ -10,16 +10,25 @@
 
     <EditText
         android:id="@+id/EditSearch"
-        android:layout_width="match_parent"
+        android:layout_marginLeft="60dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"></EditText>
+        android:hint="@string/search"
+        ></EditText>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_marginTop="-35dp"
+        android:layout_width="50dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_youtube_searched_for_black_24dp" />
 
     <Button
         android:id="@+id/btnSaveFacture"
         android:text="@string/new_facture"
         android:layout_width="wrap_content"
         android:layout_marginTop="80dp"
-        android:layout_marginLeft="320dp"
+        android:layout_marginLeft="300dp"
         android:layout_height="wrap_content"></Button>
 
     <androidx.recyclerview.widget.RecyclerView
