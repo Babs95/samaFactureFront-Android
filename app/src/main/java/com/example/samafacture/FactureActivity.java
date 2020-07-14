@@ -5,12 +5,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,7 +32,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -46,6 +54,9 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
     private BdSamaFacture bdSamaFacture;
     private Button btnsave,btnpaye;
     ProgressBar progressBar;
+    MyFactureAdapter myFactureAdapter;
+    private EditText SearchText;
+    boolean VerifConnection;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,9 +73,30 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
         ListFactureRecyclerView = view.findViewById(R.id.ListFactRecycler);
         btnsave = view.findViewById(R.id.btnSaveFacture);
         btnpaye = view.findViewById(R.id.btnPayeFact);
+        SearchText = view.findViewById(R.id.EditSearch);
+        SearchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(s.toString());
+            }
+        });
         ListFacture = new ArrayList<>();
         ListFacturePayer = new ArrayList<>();
         ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
+        for (int i=0; i<ListFacture.size();i++){
+            System.out.println("Liste Facture"+i);
+            System.out.println(ListFacture.get(i).getLibelle());
+        }
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,11 +107,24 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
         });
         //Initialisation RecyclerViewFacture
         initRecyclerView();
+        //Synchronisation des factures
+        //VerifConnection = isNetworkConnected();
+        //if(VerifConnection == )
+        Timer_Synchronisation();
         return view;
+    }
+    private void filter(String text) {
+        ArrayList<Facture> filteredListFacture = new ArrayList<>();
+        for (Facture item : ListFacture) {
+            if (item.getLibelle().toLowerCase().contains(text.toLowerCase()) || item.getEtat().toLowerCase().contains(text.toLowerCase())) {
+                filteredListFacture.add(item);
+            }
+        }
+        myFactureAdapter.filterList(filteredListFacture);
     }
     private void initRecyclerView(){
         ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
-        MyFactureAdapter myFactureAdapter = new MyFactureAdapter(getActivity(),ListFacture,this, (MyFactureAdapter.OnFactureListener) this);
+        myFactureAdapter = new MyFactureAdapter(getActivity(),ListFacture,this, (MyFactureAdapter.OnFactureListener) this);
         ListFactureRecyclerView.setAdapter(myFactureAdapter);
         ListFactureRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -91,8 +136,7 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
         getActivity().runOnUiThread(new Runnable(){
             @Override
             public void run(){
-                System.out.println("In response.isSuccessful()");
-                String message = "facture crée avec succèss";
+                String message = "Facture crée avec succèss";
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 initRecyclerView();
             }
@@ -116,31 +160,77 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
             public void run(){
                 String message = "Facture payé avec succèss";
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                initRecyclerView();
                 GetFacturePayer();
+                initRecyclerView();
             }
         });
     }
 
-    public void GetFacturePayer() {
-        ListFacturePayer = bdSamaFacture.getFacturesPayer();
-        for (int i=0;i<ListFacturePayer.size();i++){
-            String postBody="{\n" +
-                    "    \"libelle\": \""+ListFacturePayer.get(i).getLibelle()+"\",\n" +
-                    "    \"datePaiement\": \""+ListFacturePayer.get(i).getDatePaiement()+"\",\n" +
-                    "    \"montant\": \""+ListFacturePayer.get(i).getMontant()+"\",\n" +
-                    "    \"etat\": \""+ListFacturePayer.get(i).getEtat()+"\",\n" +
-                    "    \"user_id\": \""+ListFacturePayer.get(i).getUser_id()+"\",\n" +
-                    "    \"fournisseur\": \""+ListFacturePayer.get(i).getFournisseur()+"\",\n" +
-                    "    \"typepaiement\": \""+ListFacturePayer.get(i).getTypepaiement()+"\",\n" +
-                    "    \"mois\": \""+ListFacturePayer.get(i).getMois()+"\"\n" +
-                    "}";
-            SynchroniserFacture(postBody);
-        }
-        initRecyclerView();
+    public void Timer_Synchronisation(){
+        TimerTask repeatedTask = new TimerTask() {
+            public void run() {
+                System.out.println("Synchronisation Facture");
+                boolean connection = isNetworkConnected();
+                if(connection == true){
+                    System.out.println("Connected");
+                    GetFacturePayer();
+                }else {
+                    System.out.println("Not Connected");
+                    //cancel();
+                }
+            }
+        };
+        Timer timer = new Timer("Timer");
+
+        long delay  = 10000L;
+        long period = 10000L;
+        timer.scheduleAtFixedRate(repeatedTask, delay, period);
+
     }
 
-    public void SynchroniserFacture(String postBody) {
+    public void GetFacturePayer() {
+        ListFacturePayer = bdSamaFacture.getFacturesPayer();
+        if(ListFacturePayer!=null && !ListFacturePayer.isEmpty()){
+            for (int i=0;i<ListFacturePayer.size();i++){
+                System.out.println("Liste FacturePayer"+i);
+                System.out.println(ListFacturePayer.get(i).getId());
+                System.out.println(ListFacturePayer.get(i).getUser_id());
+                System.out.println(ListFacturePayer.get(i).getLibelle());
+                System.out.println(ListFacturePayer.get(i).getEtat());
+                System.out.println(ListFacturePayer.get(i).getSyncOnLine());
+                String postBody="{\n" +
+                        "    \"libelle\": \""+ListFacturePayer.get(i).getLibelle()+"\",\n" +
+                        "    \"datePaiement\": \""+ListFacturePayer.get(i).getDatePaiement()+"\",\n" +
+                        "    \"montant\": \""+ListFacturePayer.get(i).getMontant()+"\",\n" +
+                        "    \"etat\": \""+ListFacturePayer.get(i).getEtat()+"\",\n" +
+                        "    \"user_id\": \""+ListFacturePayer.get(i).getUser_id()+"\",\n" +
+                        "    \"fournisseur\": \""+ListFacturePayer.get(i).getFournisseur()+"\",\n" +
+                        "    \"typepaiement\": \""+ListFacturePayer.get(i).getTypepaiement()+"\",\n" +
+                        "    \"mois\": \""+ListFacturePayer.get(i).getMois()+"\"\n" +
+                        "}";
+                boolean CheckConnection = isNetworkConnected();
+                if (CheckConnection == true){
+                    SynchroniserFacture(postBody,ListFacturePayer.get(i).getId(),"payer",ListFacturePayer.get(i).getTypepaiement(),"payer","Ok");
+                }
+
+            }
+            //initRecyclerView();
+        }
+    }
+    private boolean isNetworkConnected() {
+        boolean connection = false;
+        //if(getActivity() !=null){
+            ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            if(cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected()){
+                connection = true;
+            }else {
+                connection = false;
+            }
+        //}
+        return connection;
+    }
+
+    public void SynchroniserFacture(String postBody, final int id, final String etat, final String typepaiement, final String LocalState, final String SynchroOnline ) {
         try {
 
             String url = "https://api-samafacture.herokuapp.com/api/facture/store";
@@ -164,13 +254,14 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    bdSamaFacture.updateFacture(id,etat,typepaiement,LocalState,SynchroOnline);
                     System.out.println("In onResponse");
                     try {
                         //final String babs = response.body().string();
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                System.out.println("In response.isSuccessful()");
+                                initRecyclerView();
                                 String message = "Facture synchroniser avec succèss";
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             }

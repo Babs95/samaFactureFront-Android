@@ -82,6 +82,13 @@ public class NewFactureDialog extends DialogFragment  {
         spinnerFour = (Spinner) view.findViewById(R.id.spinner_typepaiement);
         //loadSpinnerDataMois();
         //loadSpinnerDataFournisseur();
+        List<User> userList = bdSamaFacture.ListUser();
+        for (int i=0;i<userList.size();i++) {
+            System.out.println(userList.get(i).getId());
+            System.out.println(userList.get(i).getLogin());
+            System.out.println(userList.get(i).getPassword());
+            System.out.println(userList.get(i).getUser_id());
+        }
 
 
         ListFacture = new ArrayList<>();
@@ -136,6 +143,7 @@ public class NewFactureDialog extends DialogFragment  {
                 for (int i=0;i<ListUserConnected.size();i++) {
                     IdUser=ListUserConnected.get(i).getUser_id();
                 }
+                System.out.println("Id User Connecyed"+IdUser);
               bdSamaFacture.createFacture(libelle,dtf.format(now),montant,"non-payer",IdUser,fournisseur,null,null,mois,"non-payer","nonOk",null);
               mOnInputSelected.sendInput(babs);
                 getDialog().dismiss();

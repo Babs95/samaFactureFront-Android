@@ -118,4 +118,9 @@ public class MyFactureAdapter extends RecyclerView.Adapter<MyFactureAdapter.MyVi
     public interface OnFactureListener {
         void onFactureClick(int position);
     }
+
+    public void filterList(ArrayList<Facture> filteredList) {
+        dataList = filteredList;
+        notifyDataSetChanged();
+    }
 }

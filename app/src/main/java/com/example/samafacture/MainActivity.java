@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private  String login, password;
     ProgressBar progressBar;
     Wave wave2;
+    int IdUserConnected = 0;
     private BdSamaFacture bdSamaFacture;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                                 System.out.println("id");
                                 System.out.println(user.getId());
                                 idBabs = user.getId();
+                                IdUserConnected = user.getId();
                                 System.out.println("nom");
                                 System.out.println(user.getNom());
                                 System.out.println("Prenom");
@@ -198,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                                     bdSamaFacture.updateUser(1,user.getNom(),user.getPrenom(),user.getEmail(),user.getLogin(),user.getPassword(),user.getId());
                                     List<Facture> LisFact =  bdSamaFacture.getFactures();
                                     for (int j=0;j<LisFact.size();j++){
-                                        if(LisFact.get(j).getUser_id() == idBabs){
+                                        if(LisFact.get(j).getUser_id() == IdUserConnected){
                                             currentUser = true;
                                             break;
                                         }else {
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     if(currentUser == true){
                                         System.out.println("Current = true");
-                                        bdSamaFacture.deleteFactureTemp(idBabs);
+                                        bdSamaFacture.deleteFactureTemp(IdUserConnected);
                                         //Dans ce for on garde les factures non-payer du utilisateur toujours connecté
                                         System.out.println("Avant for");
                                         for (int p=0;p<LisFact.size();p++){
@@ -224,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         bdSamaFacture.deleteFacture();
 
-                                        List<Facture> LisFactTemp =  bdSamaFacture.getFacturesTempUser(idBabs);
+                                        List<Facture> LisFactTemp =  bdSamaFacture.getFacturesTempUser(IdUserConnected);
                                         System.out.println("Avant If LisFactTemp !null");
                                         if(LisFactTemp != null && !LisFactTemp.isEmpty()){
                                             System.out.println("Avant for Temp");
@@ -235,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                                                     bdSamaFacture.createFacture(LisFactTemp.get(k).getLibelle(),LisFactTemp.get(k).getDatePaiement(),LisFactTemp.get(k).getMontant(),LisFactTemp.get(k).getEtat(),LisFactTemp.get(k).getUser_id(),LisFactTemp.get(k).getFournisseur(),LisFactTemp.get(k).getTypepaiement(),LisFactTemp.get(k).getAnnee(),LisFactTemp.get(k).getMois(),LisFactTemp.get(k).getLocalState(),LisFactTemp.get(k).getSyncOnLine(),LisFactTemp.get(k).getIdFacture());
 
                                             }
-                                            bdSamaFacture.deleteFactureTemp(idBabs);
+                                            bdSamaFacture.deleteFactureTemp(IdUserConnected);
                                         }
                                     }else {
                                         bdSamaFacture.deleteFactureTemp(idLastUser);
@@ -248,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         bdSamaFacture.deleteFacture();
                                         //Dans ce for on charge les factures non payer du nouveau utilisateur connecté
-                                        List<Facture> LisFactTemp2 =  bdSamaFacture.getFacturesTempUser(idBabs);
+                                        List<Facture> LisFactTemp2 =  bdSamaFacture.getFacturesTempUser(IdUserConnected);
                                         if(LisFactTemp2 != null && !LisFactTemp2.isEmpty()){
                                             for (int m=0;m<LisFactTemp2.size();m++){
                                                 System.out.println("Facture Non payer Nouveau User");
@@ -257,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                                                 bdSamaFacture.createFacture(LisFactTemp2.get(m).getLibelle(),LisFactTemp2.get(m).getDatePaiement(),LisFactTemp2.get(m).getMontant(),LisFactTemp2.get(m).getEtat(),LisFactTemp2.get(m).getUser_id(),LisFactTemp2.get(m).getFournisseur(),LisFactTemp2.get(m).getTypepaiement(),LisFactTemp2.get(m).getAnnee(),LisFactTemp2.get(m).getMois(),LisFactTemp2.get(m).getLocalState(),LisFactTemp2.get(m).getSyncOnLine(),LisFactTemp2.get(m).getIdFacture());
 
                                             }
-                                            bdSamaFacture.deleteFactureTemp(idBabs);
+                                            bdSamaFacture.deleteFactureTemp(IdUserConnected);
                                         }
                                     }
                                 }else {
@@ -268,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    loadFactureOnSqliteDatabase(idBabs2);
+                                    loadFactureOnSqliteDatabase(IdUserConnected);
                                     progressBar.setVisibility(View.GONE);
                                     AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                                     dialog.setIcon(R.mipmap.ic_launcher);
@@ -297,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void loadFactureOnSqliteDatabase(final int id) {
+    public void loadFactureOnSqliteDatabase(int id) {
         //progressBar.setVisibility(View.VISIBLE);
         String url = "https://api-samafacture.herokuapp.com/api/facture/getall";
         OkHttpClient client = new OkHttpClient();
@@ -327,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
                         Facture facture = new Facture();
                         for(int i=0;i<jsonArray.length();i++){
                             JSONObject jsonObject1=jsonArray.getJSONObject(i);
-                            if(jsonObject1.getInt("user_id") == id){
+                            if(jsonObject1.getInt("user_id") == IdUserConnected){
                                 facture.setIdFacture(jsonObject1.getInt("id"));
                                 facture.setLibelle(jsonObject1.getString("libelle"));
                                 facture.setDatePaiement(jsonObject1.getString("datePaiement"));
@@ -345,9 +347,9 @@ public class MainActivity extends AppCompatActivity {
 
                                 Gson gson4 = new Gson();
                                 Typepaiment typepaiment = gson4.fromJson(String.valueOf(jsonObject1.getJSONObject("typepaiement")), Typepaiment.class);
-                                if(facture.getEtat().equalsIgnoreCase("payer")){
+                                //if(facture.getEtat().equalsIgnoreCase("payer")){
                                     bdSamaFacture.createFacture(facture.getLibelle(),facture.getDatePaiement(),facture.getMontant(),facture.getEtat(),facture.getUser_id(),fournisseur.getLibelle(),typepaiment.getLibelle(),annee.getLibelle(),mois.getLibelle(),facture.getEtat(),"Ok",facture.getIdFacture());
-                                }
+                                //}
 
                             }
 

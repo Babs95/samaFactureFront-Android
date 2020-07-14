@@ -8,6 +8,12 @@
     android:layout_height="match_parent"
     tools:context=".FactureActivity">
 
+    <EditText
+        android:id="@+id/EditSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"></EditText>
+
     <Button
         android:id="@+id/btnSaveFacture"
         android:text="@string/new_facture"
