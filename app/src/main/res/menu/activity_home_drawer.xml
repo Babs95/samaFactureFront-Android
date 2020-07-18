@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_menu_send"
             android:title="@string/my_facture" />
         <item
+            android:id="@+id/nav_fournisseur"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/provider" />
+        <item
             android:id="@+id/nav_profil"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/menu_profil" />

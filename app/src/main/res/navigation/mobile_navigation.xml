@@ -19,6 +19,12 @@
         tools:layout="@layout/activity_facture" />
 
     <fragment
+        android:id="@+id/nav_fournisseur"
+        android:name="com.example.samafacture.FactureActivity"
+        android:label="@string/provider"
+        tools:layout="@layout/fragment_fournisseur" />
+
+    <fragment
         android:id="@+id/nav_profil"
         android:name="com.example.samafacture.ProfilFragment"
         android:label="@string/menu_profil"

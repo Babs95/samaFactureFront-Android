@@ -183,8 +183,8 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
         };
         Timer timer = new Timer("Timer");
 
-        long delay  = 10000L;
-        long period = 10000L;
+        long delay  = 30000L;
+        long period = 30000L;
         timer.scheduleAtFixedRate(repeatedTask, delay, period);
 
     }
@@ -230,7 +230,7 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
             }
 
         }catch (Exception e){
-            System.out.println(e);
+            //System.out.println(e);
         }
 
         //}

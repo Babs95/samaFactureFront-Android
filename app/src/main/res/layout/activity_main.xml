@@ -41,15 +41,23 @@
 
     <Button
         android:id="@+id/btnConnect"
-        android:text="@string/connection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></Button>
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/connection"
+        android:layout_marginTop="@dimen/size_top"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"></Button>
 
     <Button
         android:id="@+id/btnSignIn"
-        android:text="@string/sign_in"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></Button>
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlueAccent"
+        android:text="@string/sign_in"
+        android:layout_marginTop="@dimen/size_top"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"></Button>
 
     <com.github.ybq.android.spinkit.SpinKitView
         xmlns:app="http://schemas.android.com/apk/res-auto"

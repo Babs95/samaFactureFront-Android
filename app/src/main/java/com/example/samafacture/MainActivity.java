@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Chargement des mois,fournisseurs et typepaiement dans les tables sqlite
         loadSpinnerDataMois();
-        loadSpinnerDataFournisseur();
+        //loadSpinnerDataFournisseur();
         loadSpinnerDataTypePaiement();
         //givenUsingTimer__whenSchedulingRepeatedTask__thenCorrect();
         //Progessbar
@@ -424,51 +424,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void loadSpinnerDataFournisseur() {
-        String url = "https://api-samafacture.herokuapp.com/api/fournisseur/getall";
-        OkHttpClient  client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String error = getString(R.string.error_connection);
-                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try{
-                    bdSamaFacture.deleteAllFournisseur();
-                    JSONObject jsonObject=new JSONObject(response.body().string());
-                    if(jsonObject.getInt("success")==1){
-                        JSONArray jsonArray=jsonObject.getJSONArray("Fournisseur");
-
-                        for(int i=0;i<jsonArray.length();i++){
-                            JSONObject jsonObject1=jsonArray.getJSONObject(i);
-                            //String fourniss=jsonObject1.getString("libelle");
-                            Gson gson=new Gson();
-                            Fournisseur f = gson.fromJson(jsonObject1.toString(), Fournisseur.class);
-                            bdSamaFacture.createFournisseur(f.getLibelle(),f.getId());
-                        }
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //spinnerFour.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListF));
-                        }
-                    });
-                }catch (JSONException e){e.printStackTrace();}
-            }
-        });
-
-    }
     private void loadSpinnerDataTypePaiement() {
         String url = "https://api-samafacture.herokuapp.com/api/typepaiement/getall";
         OkHttpClient  client = new OkHttpClient();

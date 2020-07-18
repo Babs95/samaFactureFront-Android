@@ -8,6 +8,7 @@
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="connect">Connect</string>
+    <string name="provider">Providers</string>
     <string name="sign_in">Sign In</string>
     <string name="help">Help</string>
     <string name="cancel">Cancel</string>

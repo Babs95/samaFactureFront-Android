@@ -4,10 +4,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -129,22 +132,24 @@ public class NewFactureDialog extends DialogFragment  {
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
+            //@RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 libelle=txtlibelle.getText().toString().trim();
                 babs=libelle;
                 montant=txtmontant.getText().toString().trim();
 
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                LocalDateTime now = LocalDateTime.now();
+                //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                //LocalDateTime now = LocalDateTime.now(); dtf.format(now)
+                String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
                 List<User> ListUserConnected = bdSamaFacture.ListUser();
                 int IdUser=0;
                 for (int i=0;i<ListUserConnected.size();i++) {
                     IdUser=ListUserConnected.get(i).getUser_id();
                 }
-                System.out.println("Id User Connecyed"+IdUser);
-              bdSamaFacture.createFacture(libelle,dtf.format(now),montant,"non-payer",IdUser,fournisseur,null,null,mois,"non-payer","nonOk",null);
+                System.out.println("Id User Connected"+IdUser);
+                System.out.println("Datez now"+currentDate);
+              bdSamaFacture.createFacture(libelle,currentDate,montant,"non-payer",IdUser,fournisseur,null,null,mois,"non-payer","nonOk",null);
               mOnInputSelected.sendInput(babs);
                 getDialog().dismiss();
 
