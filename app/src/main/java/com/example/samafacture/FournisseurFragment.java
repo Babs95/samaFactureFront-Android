@@ -103,8 +103,10 @@ public class FournisseurFragment extends Fragment implements MyFournisseurAdapte
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             //ListFournisseur.remove(viewHolder.getAdapterPosition());
-            System.out.println(ListFournisseur.get(viewHolder.getAdapterPosition()).getFournisseur_id());
-            System.out.println(ListFournisseur.get(viewHolder.getAdapterPosition()).getLibelle());
+            deleteFournisseur(ListFournisseur.get(viewHolder.getAdapterPosition()).getFournisseur_id());
+            ListFournisseur.remove(viewHolder.getAdapterPosition());
+            //System.out.println(ListFournisseur.get(viewHolder.getAdapterPosition()).getFournisseur_id());
+            //System.out.println(ListFournisseur.get(viewHolder.getAdapterPosition()).getLibelle());
             //ListFournisseur.n
         }
     };
@@ -199,6 +201,64 @@ public class FournisseurFragment extends Fragment implements MyFournisseurAdapte
                     loadSpinnerDataFournisseur();
                 }
             });
+        }
+    }
+
+    public void deleteFournisseur(int id) {
+        try {
+
+            String url = "https://api-samafacture.herokuapp.com/api/fournisseur/delete/"+id;
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .delete()
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, final IOException e) {
+                    if(getActivity() != null){
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String error = getString(R.string.error_connection);
+                                //Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                                Toasty.error(getActivity(), error, Toast.LENGTH_SHORT, true).show();
+                            }
+                        });
+                    }
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    System.out.println("In onResponse");
+                    //mOnInputSelected.sendInput(mInput.getText().toString());
+                    try {
+                        //final String babs = response.body().string();
+                        if(getActivity() != null){
+                            //mOnInputSelected.UpdateFour(babs);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String message = "Fournisseur supprimer avec succèss";
+                                    Toasty.warning(getActivity(), message, Toast.LENGTH_SHORT, true).show();
+                                    loadSpinnerDataFournisseur();
+                                }
+                            });
+
+                        }
+
+
+                    }catch (Exception e){
+                        System.out.println(e);
+                    }
+
+                }
+            });
+
+
+        } catch (Exception e){
+
         }
     }
 }
