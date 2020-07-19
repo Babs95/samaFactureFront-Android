@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -66,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
         btnConnect = findViewById(R.id.btnConnect);
         btnSignIn = findViewById(R.id.btnSignIn);
 
-        //Chargement des mois,fournisseurs et typepaiement dans les tables sqlite
-        loadSpinnerDataMois();
+        //Chargement typepaiement dans les tables sqlite
         //loadSpinnerDataFournisseur();
         loadSpinnerDataTypePaiement();
         //givenUsingTimer__whenSchedulingRepeatedTask__thenCorrect();
@@ -106,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        //Ceci nous permet de vérifier si c'est la première fois que l'application est démarré
+        //C'est à dire après l'installation
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        boolean firstStart = prefs.getBoolean("firstStart", true);
+        if (firstStart) {
+            //Ici on charge les mois une seule fois dans la base de données Sqlite
+            loadSpinnerDataMois();
+        }
     }
     public void givenUsingTimer__whenSchedulingRepeatedTask__thenCorrect(){
         TimerTask repeatedTask = new TimerTask() {
@@ -380,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Remplissage Table Fournisseur,Mois & Typepaiement
+     * Remplissage Table Mois & Typepaiement
      */
     private void loadSpinnerDataMois() {
         String url = "https://api-samafacture.herokuapp.com/api/mois/getall";
@@ -421,8 +429,10 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //ListM
-                            //spinnerMois.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListM));
+                            SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean("firstStart", false);
+                            editor.apply();
                         }
                     });
                 }catch (JSONException e){e.printStackTrace();}

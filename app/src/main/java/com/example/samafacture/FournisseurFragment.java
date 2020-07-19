@@ -2,7 +2,9 @@ package com.example.samafacture;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,7 +41,7 @@ import okhttp3.Response;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
-public class FournisseurFragment extends Fragment implements MyFournisseurAdapter.OnFournisseurListener,NewFournisseurDialog.OnInputSelected {
+public class FournisseurFragment extends Fragment implements MyFournisseurAdapter.OnFournisseurListener,NewFournisseurDialog.OnInputSelected, EditFournisseurDialog.OnUpdateFour {
 
     private RecyclerView ListFournisseurRecyclerView;
     private ArrayList<Fournisseur> ListFournisseur;
@@ -88,7 +90,24 @@ public class FournisseurFragment extends Fragment implements MyFournisseurAdapte
         myFournisseurAdapter = new MyFournisseurAdapter(getActivity(),ListFournisseur,this, this);
         ListFournisseurRecyclerView.setAdapter(myFournisseurAdapter);
         ListFournisseurRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(ListFournisseurRecyclerView);
+        //ListFournisseurRecyclerView.notifyAll();
     }
+
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            //ListFournisseur.remove(viewHolder.getAdapterPosition());
+            System.out.println(ListFournisseur.get(viewHolder.getAdapterPosition()).getFournisseur_id());
+            System.out.println(ListFournisseur.get(viewHolder.getAdapterPosition()).getLibelle());
+            //ListFournisseur.n
+        }
+    };
 
     @Override
     public void OnFournisseurClick(int position) {
@@ -162,6 +181,20 @@ public class FournisseurFragment extends Fragment implements MyFournisseurAdapte
                 @Override
                 public void run(){
                     String message = "Fournisseur crée avec succèss";
+                    Toasty.success(getActivity(), message, Toast.LENGTH_SHORT, true).show();
+                    loadSpinnerDataFournisseur();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void UpdateFour(String input) {
+        if(getActivity() != null){
+            getActivity().runOnUiThread(new Runnable(){
+                @Override
+                public void run(){
+                    String message = "Fournisseur modifier avec succèss";
                     Toasty.success(getActivity(), message, Toast.LENGTH_SHORT, true).show();
                     loadSpinnerDataFournisseur();
                 }

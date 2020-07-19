@@ -1,6 +1,7 @@
 package com.example.samafacture.Models;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.samafacture.EditFournisseurDialog;
 import com.example.samafacture.FournisseurFragment;
 import com.example.samafacture.R;
 
@@ -61,9 +64,19 @@ public class MyFournisseurAdapter extends RecyclerView.Adapter<MyFournisseurAdap
         public void onClick(View v) {
             onFournisseurListener.OnFournisseurClick(getAdapterPosition());
             pos = getAdapterPosition();
+
+            EditFournisseurDialog editFournisseurDialog=new EditFournisseurDialog();
+            Bundle bundle = new Bundle();
+            bundle.putInt("Id",ListFournisseur.get(pos).getFournisseur_id());
+            bundle.putString("Libelle",ListFournisseur.get(pos).getLibelle());
+            editFournisseurDialog.setArguments(bundle);
+            editFournisseurDialog.setTargetFragment(fragmentFournisseur, 1);
+            editFournisseurDialog.show(fragmentFournisseur.getFragmentManager(), "EditFournisseurDialog");
         }
     }
     public interface OnFournisseurListener {
         void OnFournisseurClick(int position);
     }
+
+
 }
