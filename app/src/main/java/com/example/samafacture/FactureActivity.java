@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -93,11 +94,11 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
         });
         ListFacture = new ArrayList<>();
         ListFacturePayer = new ArrayList<>();
-        ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
-        for (int i=0; i<ListFacture.size();i++){
+        //ListFacture = (ArrayList<Facture>) bdSamaFacture.getFactures();
+        /*for (int i=0; i<ListFacture.size();i++){
             System.out.println("Liste Facture"+i);
             System.out.println(ListFacture.get(i).getLibelle());
-        }
+        }*/
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,7 +139,8 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
             @Override
             public void run(){
                 String message = "Facture crée avec succèss";
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                Toasty.success(getActivity(), message, Toast.LENGTH_SHORT, true).show();
+                //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 initRecyclerView();
             }
         });
@@ -160,7 +162,8 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
             @Override
             public void run(){
                 String message = "Facture payé avec succèss";
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                Toasty.success(getActivity(), message, Toast.LENGTH_SHORT, true).show();
+                //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 GetFacturePayer();
                 initRecyclerView();
             }
@@ -270,7 +273,8 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
                             public void run() {
                                 initRecyclerView();
                                 String message = "Facture synchroniser avec succèss";
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                Toasty.success(getActivity(), message, Toast.LENGTH_SHORT, true).show();
+                                //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             }
                         });
 

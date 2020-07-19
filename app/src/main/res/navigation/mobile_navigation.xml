@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/nav_fournisseur"
-        android:name="com.example.samafacture.FactureActivity"
+        android:name="com.example.samafacture.FournisseurFragment"
         android:label="@string/provider"
         tools:layout="@layout/fragment_fournisseur" />
 

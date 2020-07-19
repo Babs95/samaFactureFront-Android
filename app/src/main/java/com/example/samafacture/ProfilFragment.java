@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -100,26 +101,7 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
 
             }
         });
-        //tabAnnee =  getResources().getStringArray(R.array.tab_annee);
-        //tabEtat =  getResources().getStringArray(R.array.tab_etat);
 
-        //ListAnne.setOnClickListener();
-        /*listAnnee = view.findViewById(R.id.listFormation);
-        mInputDisplay = view.findViewById(R.id.txtInput);
-     tabAnnee =  getResources().getStringArray(R.array.tab_annee);
-     ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, tabAnnee);
-        listAnnee.setAdapter(adapter);//chargement des données dans la liste
-
-        listAnnee.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onClick: opening dialog");
-
-                MyCustomDialog dialog = new MyCustomDialog();
-                dialog.setTargetFragment(ProfilFragment.this, 1);
-                dialog.show(getFragmentManager(), "MyCustomDialog");
-            }
-        });*/
 
 
         return view;
@@ -140,7 +122,8 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
             public void run(){
                 System.out.println("In response.isSuccessful()");
                 String message = "Annee crée avec succèss";
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                Toasty.success(getActivity(), message, Toast.LENGTH_SHORT, true).show();
                 loadRecyclerViewData();
             }
         });
@@ -206,13 +189,16 @@ public class ProfilFragment extends Fragment implements MyCustomDialog.OnInputSe
                         }*/
 
                     }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setVisibility(View.GONE);
-                            initRecyclerView();
-                        }
-                    });
+                    if(getActivity() != null){
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                                initRecyclerView();
+                            }
+                        });
+                    }
+
                 }catch (JSONException e){e.printStackTrace();}
             }
         });

@@ -64,13 +64,15 @@ public class HomeFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-               getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String error = getString(R.string.error_connection);
-                        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+               if(getActivity() != null){
+                   getActivity().runOnUiThread(new Runnable() {
+                       @Override
+                       public void run() {
+                           String error = getString(R.string.error_connection);
+                           Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                       }
+                   });
+               }
             }
 
             @Override
@@ -89,12 +91,7 @@ public class HomeFragment extends Fragment {
                             bdSamaFacture.createFournisseur(f.getLibelle(),f.getId());
                         }
                     }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //spinnerFour.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ListF));
-                        }
-                    });
+
                 }catch (JSONException e){e.printStackTrace();}
             }
         });

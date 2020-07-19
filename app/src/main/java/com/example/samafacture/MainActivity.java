@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -85,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if(login.isEmpty() || password.isEmpty()) {
                     String error = getString(R.string.error_fields);
-                    Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+                    Toasty.warning(MainActivity.this, error, Toast.LENGTH_SHORT, true).show();
+                    //Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
                 } else {
                     //progressBar.setVisibility(View.INVISIBLE);
                     authentification(login, password);
@@ -152,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
                                 progressBar.setVisibility(View.GONE);
                             //}
                             String error = getString(R.string.error_connection);
-                            Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+                            Toasty.error(MainActivity.this, error, Toast.LENGTH_SHORT, true).show();
+                            //Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -172,7 +175,8 @@ public class MainActivity extends AppCompatActivity {
                                     progressBar.setVisibility(View.GONE);
                                     //wave2.stop();
                                     String message =getString(R.string.error_parameters);
-                                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                                    Toasty.error(MainActivity.this, message, Toast.LENGTH_SHORT, true).show();
+                                    //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -272,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void run() {
                                     loadFactureOnSqliteDatabase(IdUserConnected);
                                     progressBar.setVisibility(View.GONE);
+                                    Toasty.success(MainActivity.this, "Connexion réussie!", Toast.LENGTH_SHORT, true).show();
                                     AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                                     dialog.setIcon(R.mipmap.ic_launcher);
                                     dialog.setTitle("Connexion réussie");

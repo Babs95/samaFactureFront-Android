@@ -66,7 +66,6 @@ public class NewFactureDialog extends DialogFragment  {
     private BdSamaFacture bdSamaFacture;
     private Spinner spinnerMois;
     private Spinner spinnerFour;
-    private RecyclerView ListFactureRecyclerView;
     private ArrayList<Facture> ListFacture;
     @Nullable
     @Override
