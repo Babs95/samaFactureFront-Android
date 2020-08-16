@@ -150,6 +150,7 @@ public class FactureActivity extends Fragment implements PaymentDialog.OnInputSe
     @Override
     public void onFactureClick(int position) {
         /*System.out.println("OnClick Facture");
+        tets
         System.out.println(ListFacture.get(position).getId());
         System.out.println(ListFacture.get(position).getMontant());*/
     }
